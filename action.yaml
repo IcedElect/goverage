@@ -45,7 +45,7 @@ runs:
           code=$?
           set -e
 
-          if [ $code -ne 0 && $code -ne 10 ]; then
+          if [[ "$code" -ne 0 && "$code" -ne 10 ]]; then
             echo "Error processing coverage profile: $RESULT"
             exit $code
           else
