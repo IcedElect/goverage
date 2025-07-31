@@ -32,9 +32,11 @@ runs:
         go-version: "1.22"
 
     - name: Install oh-my-cover-go
+      shell: bash
       run: GOBIN=$(pwd)/bin go install github.com/IcedElect/oh-my-cover-go/cmd/oh-my-cover-go@latest
 
     - name: Process coverage profile
+      shell: bash
       run: |
         if [ -f "${{ inputs.profilePath }}" ]; then
           echo "Processing coverage profile at ${{ inputs.profilePath }}"
