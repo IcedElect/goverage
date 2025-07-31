@@ -173,9 +173,9 @@ func (r *ElementsRegistry) coverageByProfile(profile *cover.Profile) Coverage {
 
 	totalFuncs = len(file.Funcs)
 	for _, f := range file.Funcs {
-		num, den := f.Coverage(profile)
-		if den > 0 {
-			coveredFuncs += int(num)
+		num, _ := f.Coverage(profile)
+		if num > 0 {
+			coveredFuncs += 1
 		}
 	}
 
