@@ -42,13 +42,13 @@ func run(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	hosted, err := cmd.Flags().GetBool("hosted")
+	_, err = cmd.Flags().GetBool("hosted")
 	if err != nil {
 		fmt.Printf("Error getting hosted flag: %v\n", err)
 		return
 	}
 
-	err = profile.ProcessProfile(coverProfileFileName, coverOutputDir, hosted)
+	err = profile.ProcessProfile(coverProfileFileName, coverOutputDir)
 	if err != nil {
 		fmt.Printf("Error processing profile: %v\n", err)
 		return

@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>{{ block "title" . }}{{ end }}Oh My Cover Go</title>
     
-    <link rel="stylesheet" href="{{ .Global.BaseUrl }}/assets/main.css" />
-    <link rel="stylesheet" href="{{ .Global.BaseUrl }}/assets/new.css" />
+    <link rel="stylesheet" href="{{ .CurrentPath | baseurl }}/assets/main.css" />
+    <link rel="stylesheet" href="{{ .CurrentPath | baseurl }}/assets/new.css" />
     <script src="https://kit.fontawesome.com/e084bc3728.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -14,12 +14,12 @@
         <header class="pad1">
             <h1>
                 {{ if .Directory }}
-                    <a href="{{ .Global.BaseUrl }}/index.html">All Files</a>
+                    <a href="{{ .CurrentPath | baseurl }}/index.html">All Files</a>
                     {{ .Directory.Path }}
                 {{ else if .File }}
-                    <a href="{{ .Global.BaseUrl }}/index.html">All Files</a>
+                    <a href="{{ .CurrentPath | baseurl }}/index.html">All Files</a>
                     /
-                    <a href="{{ .Global.BaseUrl }}/{{ .File.Path }}/index.html">{{ .File.Path }}</a>
+                    <a href="index.html">{{ .File.Path }}</a>
                     /
                     {{ .File.Name }}
                 {{ else }}

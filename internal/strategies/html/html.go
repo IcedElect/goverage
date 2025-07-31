@@ -2,7 +2,6 @@ package html
 
 import (
 	"fmt"
-	"html/template"
 	"os"
 	"path"
 	"path/filepath"
@@ -18,17 +17,10 @@ func (s *HTMLStrategy) Name() string {
 	return "HTML"
 }
 
-func (s *HTMLStrategy) Execute(profiles []*cover.Profile, outputDir string, hosted bool) (err error) {
+func (s *HTMLStrategy) Execute(profiles []*cover.Profile, outputDir string) (err error) {
 	outputPath := getOutputPath(outputDir)
 
-	baseURL := "/"
-	if !hosted {
-		baseURL = "file://" + outputPath
-	}
-
-	globalData = GlobalData{
-		BaseUrl: template.URL(baseURL),
-	}
+	globalData = GlobalData{}
 
 	err = s.execute(profiles, outputPath)
 	if err != nil {

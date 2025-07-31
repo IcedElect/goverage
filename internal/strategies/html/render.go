@@ -17,6 +17,7 @@ func renderDirectory(w io.Writer, dir *utils.Directory, elements []*Element) err
 	}
 
 	err = tmplParsed.Execute(w, TemplateData{
+		CurrentPath: dir.Path,
 		Global:   globalData,
 		Directory: dir,
 		Elements:  elements,
@@ -37,6 +38,7 @@ func renderFile(w io.Writer, file *File) error {
 	}
 
 	err = tmplParsed.Execute(w, TemplateData{
+		CurrentPath: file.Path,
 		Global: globalData,
 		File:   file,
 	})
