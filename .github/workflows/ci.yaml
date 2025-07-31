@@ -29,9 +29,9 @@ jobs:
         run: go test -coverprofile=coverage.out ./...
 
       - name: Coverage Report
-        uses: IcedElect/oh-my-cover-go@feature/github-actions
+        uses: IcedElect/oh-my-cover-go@latest
         with:
-          version: 11d120fc2915656df328262b798f53a67f067de6
+          version: latest
           profilePath: coverage.out
           branch: coverage
           threshold: 15
