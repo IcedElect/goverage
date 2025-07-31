@@ -69,7 +69,7 @@ func (s *HTMLStrategy) execute(profiles []*cover.Profile, outputDir string) (flo
 		return totalCoveragePercent, fmt.Errorf("error executing assets: %v", err)
 	}
 
-	_, err = s.executeDirectory(outputDir, elementsRegistry, &utils.Directory{
+	_, err = s.executeDirectory(outputDir, elementsRegistry, utils.Directory{
 		Path:    "",
 	})
 	if err != nil {
@@ -89,7 +89,7 @@ func (s *HTMLStrategy) execute(profiles []*cover.Profile, outputDir string) (flo
 	return totalCoveragePercent, nil
 }
 
-func (s *HTMLStrategy) executeDirectories(dirs []*utils.Directory, elementsRegistry *ElementsRegistry, outputDir string) error {
+func (s *HTMLStrategy) executeDirectories(dirs []utils.Directory, elementsRegistry *ElementsRegistry, outputDir string) error {
 	for _, dir := range dirs {
 		if _, err := s.executeDirectory(outputDir, elementsRegistry, dir); err != nil {
 			return fmt.Errorf("error executing directory %s: %v", dir.Path, err)
@@ -109,7 +109,7 @@ func (s *HTMLStrategy) executeFiles(files []*File, outputDir string) error {
 	return nil
 }
 
-func (s *HTMLStrategy) executeDirectory(outputDir string, elementsRegistry *ElementsRegistry, dir *utils.Directory) (*os.File, error) {
+func (s *HTMLStrategy) executeDirectory(outputDir string, elementsRegistry *ElementsRegistry, dir utils.Directory) (*os.File, error) {
 	path := getPath(outputDir, dir.Path, "index.html")
 	w, err := s.createFile(path)
 	if err != nil {

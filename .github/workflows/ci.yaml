@@ -31,7 +31,7 @@ jobs:
       - name: Coverage Report
         uses: IcedElect/oh-my-cover-go@feature/github-actions
         with:
-          version: ${{ github.sha }}
+          version: ${{ github.workflow_sha }}
           profilePath: coverage.out
           branch: coverage
           threshold: 15

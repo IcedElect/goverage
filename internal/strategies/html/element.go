@@ -119,7 +119,7 @@ func (r *ElementsRegistry) AddProfile(profile *cover.Profile) *Element {
 	return element
 }
 
-func (r *ElementsRegistry) AddDirectory(dir *utils.Directory, path string) *Element {
+func (r *ElementsRegistry) AddDirectory(dir utils.Directory, path string) *Element {
 	coverage := r.coverageByDirectory(dir)
 	element := &Element{
 		Name:     dir.Path,
@@ -187,7 +187,7 @@ func (r *ElementsRegistry) coverageByProfile(profile *cover.Profile) Coverage {
 	}
 }
 
-func (r *ElementsRegistry) coverageByDirectory(dir *utils.Directory) Coverage {
+func (r *ElementsRegistry) coverageByDirectory(dir utils.Directory) Coverage {
 	totalStatements := 0
 	coveredStatements := 0
 	totalLines := 0
