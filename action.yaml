@@ -67,4 +67,5 @@ runs:
       run: |
         echo "::error::${{ steps.coverage.outputs.result }}"
         echo "coverage report url: ${{ steps.deployment.outputs.page_url }}"
+        echo "### Hello world! :rocket:" >> $GITHUB_STEP_SUMMARY
         exit 1
