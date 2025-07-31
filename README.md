@@ -6,6 +6,7 @@
 - difference coverage (only new changes for PR)
 - stdout strategy
 - open files from report page
+- tests
 - coverage requirements
 - elements filter
 - shortcuts
