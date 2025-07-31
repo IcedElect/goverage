@@ -39,12 +39,9 @@ runs:
       id: coverage
       run: |
         if [ -f "${{ inputs.profilePath }}" ]; then
-          echo "::debug::Processing coverage profile at ${{ inputs.profilePath }}"
+          echo "::error::Processing coverage profile at ${{ inputs.profilePath }}"
           RESULT=$(./bin/oh-my-cover-go -p "${{ inputs.profilePath }}" -o "oh-my-covererage" --threshold="${{ inputs.threshold }}")
-          echo "::debug::Result: $RESULT"
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
-          echo "### Hello world! :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo "::error title=Coverage Report::${{ inputs.repository }} - $RESULT"
         else
           echo "No coverage profile found at ${{ inputs.profilePath }}. Skipping processing."
           echo "exit_code=0" >> "$GITHUB_OUTPUT"
