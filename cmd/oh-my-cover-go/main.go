@@ -11,6 +11,7 @@ import (
 var (
 	profileFile string
 	outputDir string
+	strategy string
 	threshold uint16
 )
 
@@ -23,6 +24,7 @@ func main() {
 
 	rootCmd.PersistentFlags().StringVarP(&profileFile, "profile", "p", "", "coverage profile file")
 	rootCmd.PersistentFlags().StringVarP(&outputDir, "output", "o", "", "coverage output directory")
+	rootCmd.PersistentFlags().StringVarP(&strategy, "strategy", "s", "html", "coverage report strategy (html or stdout)")
 	rootCmd.PersistentFlags().Uint16Var(&threshold, "threshold", 0, "coverage threshold")
 
 	rootCmd.Execute()
