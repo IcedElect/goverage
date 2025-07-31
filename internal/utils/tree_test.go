@@ -2,6 +2,7 @@ package utils
 
 import (
 	"path"
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -103,7 +104,7 @@ func Test_GetProfilesTree(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			result := GetProfilesTree(tc.profiles)
-			assert.Equal(t, tc.expected, result, "Expected and actual tree lengths should match")
+			assert.Equal(t, sortDirectories(tc.expected), sortDirectories(result), "Expected and actual tree lengths should match")
 		})
 	}
 }
@@ -114,4 +115,20 @@ func makeProfile(fileName string) *cover.Profile {
 		Mode:     "set",
 		Blocks:   []cover.ProfileBlock{},
 	}
+}
+
+func sortDirectories(dirs []Directory) []Directory {
+	// Sort directories by path for consistent order in tests
+	sort.Slice(dirs, func(i, j int) bool {
+		return dirs[i].Path < dirs[j].Path
+	})
+
+	// Sort profiles within each directory by file name
+	for i := range dirs {
+		sort.Slice(dirs[i].Profiles, func(a, b int) bool {
+			return dirs[i].Profiles[a].FileName < dirs[i].Profiles[b].FileName
+		})
+	}
+
+	return dirs
 }
