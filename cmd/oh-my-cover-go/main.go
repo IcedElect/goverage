@@ -49,22 +49,22 @@ func run(cmd *cobra.Command, args []string) {
 }
 
 func writeGithubState(key, value string) {
-	stateFile := os.Getenv("GITHUB_STATE")
+	stateFile := os.Getenv("GITHUB_ENV")
     if stateFile == "" {
-        fmt.Println("GITHUB_STATE not set")
+        fmt.Println("GITHUB_ENV not set")
         os.Exit(1)
     }
 
     f, err := os.OpenFile(stateFile, os.O_APPEND|os.O_WRONLY, 0600)
     if err != nil {
-        fmt.Printf("Failed to open GITHUB_STATE file: %v\n", err)
+        fmt.Printf("Failed to open GITHUB_ENV file: %v\n", err)
         os.Exit(1)
     }
     defer f.Close()
 
     line := fmt.Sprintf("%s=%s\n", key, value)
     if _, err := f.WriteString(line); err != nil {
-        fmt.Printf("Failed to write to GITHUB_STATE file: %v\n", err)
+        fmt.Printf("Failed to write to GITHUB_ENV file: %v\n", err)
         os.Exit(1)
     }
 }
