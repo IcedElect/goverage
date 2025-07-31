@@ -55,5 +55,8 @@ runs:
       uses: actions/deploy-pages@v4
 
     - name: Conditional step
+      shell: bash
       if: ${{ steps.coverage.outputs.exit_code != '0' }}
-      run: echo "The script failed, doing something about it"
+      run: |
+        echo "The script failed, doing something about it"
+        set -e
