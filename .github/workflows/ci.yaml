@@ -48,3 +48,7 @@ jobs:
 
       - name: Coverage Report
         uses: IcedElect/oh-my-cover-go@feature/github-actions
+        with:
+          profilePath: coverage.out
+          branch: coverage
+          threshold: 0

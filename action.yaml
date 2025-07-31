@@ -44,7 +44,7 @@ runs:
       uses: actions/upload-pages-artifact@v3
       with:
         # Upload entire repository
-        path: oh-my-covererage
+        path: "./oh-my-covererage"
 
     - name: Deploy to GitHub Pages
       id: deployment
