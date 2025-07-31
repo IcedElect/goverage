@@ -44,6 +44,14 @@ runs:
           RESULT=$(./bin/oh-my-cover-go -p "${{ inputs.profilePath }}" -o "oh-my-covererage" --threshold="${{ inputs.threshold }}")
           code=$?
           set -e
+
+          if [ $code -ne 0 && $code -ne 10 ]; then
+            echo "Error processing coverage profile: $RESULT"
+            exit $code
+          else
+            echo "Coverage profile processed successfully."
+          fi
+
           echo "code=$code" >> "$GITHUB_OUTPUT"
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
         else
@@ -67,5 +75,5 @@ runs:
       run: |
         echo "::error::${{ steps.coverage.outputs.result }}"
         echo "coverage report url: ${{ steps.deployment.outputs.page_url }}"
-        echo "### Hello world! :rocket:" >> $GITHUB_STEP_SUMMARY
+        echo "### Test coverage threshold \n ${{ steps.coverage.outputs.threshold }}" >> $GITHUB_STEP_SUMMARY
         exit 1
