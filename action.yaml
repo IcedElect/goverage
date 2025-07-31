@@ -35,7 +35,7 @@ runs:
       run: |
         if [ -f "${{ inputs.profilePath }}" ]; then
           echo "Processing coverage profile at ${{ inputs.profilePath }}"
-          ./bin/oh-my-cover-go --profile="${{ inputs.profilePath }}" --output="oh-my-covererage"
+          ./bin/oh-my-cover-go -p "${{ inputs.profilePath }}" -o "oh-my-covererage"
         else
           echo "No coverage profile found at ${{ inputs.profilePath }}. Skipping processing."
         fi
