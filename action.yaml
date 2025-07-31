@@ -39,7 +39,7 @@ runs:
       id: coverage
       run: |
         if [ -f "${{ inputs.profilePath }}" ]; then
-          echo "::error::Processing coverage profile at ${{ inputs.profilePath }}"
+          echo "Processing coverage profile at ${{ inputs.profilePath }}"
           set +e
           RESULT=$(./bin/oh-my-cover-go -p "${{ inputs.profilePath }}" -o "oh-my-covererage" --threshold="${{ inputs.threshold }}")
           code=$?
@@ -65,5 +65,6 @@ runs:
       shell: bash
       if: ${{ steps.coverage.outputs.code != '0' }}
       run: |
-        echo "::error::The script failed, doing something about it"
+        echo "::error::${{ steps.coverage.outputs.result }}"
+        echo "coverage report url: ${{ steps.deployment.outputs.page_url }}"
         set -e
