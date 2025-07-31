@@ -7,6 +7,9 @@ branding:
   color: "blue"
 
 inputs:
+  version:
+    description: "Version of oh-my-cover-go to use. Default is latest."
+    default: "latest"
   repository:
     description: "Repository name with owner. For example, IcedElect/oh-my-cover-go"
     default: ${{ github.repository }}
@@ -28,7 +31,7 @@ runs:
   steps:
     - name: Install oh-my-cover-go
       shell: bash
-      run: GOBIN=$(pwd)/bin go install github.com/IcedElect/oh-my-cover-go/cmd/oh-my-cover-go@ea69907516b64b3eb68ee4a97b2b0c48409db357
+      run: GOBIN=$(pwd)/bin go install github.com/IcedElect/oh-my-cover-go/cmd/oh-my-cover-go@${{ inputs.version }}
 
     - name: Process coverage profile
       continue-on-error: true
