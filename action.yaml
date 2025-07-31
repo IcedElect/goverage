@@ -31,13 +31,17 @@ runs:
       run: GOBIN=$(pwd)/bin go install github.com/IcedElect/oh-my-cover-go/cmd/oh-my-cover-go@2df6f092b991c5fef6a579869e2dc7c4d0f913ce
 
     - name: Process coverage profile
+      continue-on-error: true
       shell: bash
+      id: coverage
       run: |
         if [ -f "${{ inputs.profilePath }}" ]; then
           echo "Processing coverage profile at ${{ inputs.profilePath }}"
           ./bin/oh-my-cover-go -p "${{ inputs.profilePath }}" -o "oh-my-covererage"
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
         else
           echo "No coverage profile found at ${{ inputs.profilePath }}. Skipping processing."
+          echo "exit_code=0" >> "$GITHUB_OUTPUT"
         fi
 
     - name: Upload artifact
@@ -49,3 +53,7 @@ runs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
+
+    - name: Conditional step
+      if: ${{ steps.coverage.outputs.exit_code != '0' }}
+      run: echo "The script failed, doing something about it"

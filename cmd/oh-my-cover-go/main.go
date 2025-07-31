@@ -2,20 +2,20 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/IcedElect/oh-my-cover-go/internal/profile"
+	"github.com/labstack/gommon/color"
 	"github.com/spf13/cobra"
 )
 
-func init() {
-
-}
+var (
+	profileFile string
+	outputDir string
+	threshold uint16
+)
 
 func main() {
-	var profileFile string
-	var outputDir string
-	var hosted bool
-
 	var rootCmd = &cobra.Command{
 		Use:   "oh-my-cover-go",
 		Short: "A tool for report profiling Go test coverage",
@@ -24,33 +24,24 @@ func main() {
 
 	rootCmd.PersistentFlags().StringVarP(&profileFile, "profile", "p", "", "coverage profile file")
 	rootCmd.PersistentFlags().StringVarP(&outputDir, "output", "o", "", "coverage output directory")
-	rootCmd.PersistentFlags().BoolVar(&hosted, "hosted", false, "coverage output directory")
+	rootCmd.PersistentFlags().Uint16Var(&threshold, "threshold", 0, "coverage threshold")
 
 	rootCmd.Execute()
 }
 
 func run(cmd *cobra.Command, args []string) {
-	coverProfileFileName, err := cmd.Flags().GetString("profile")
-	if err != nil {
-		fmt.Printf("Error getting profile flag: %v\n", err)
-		return
-	}
-
-	coverOutputDir, err := cmd.Flags().GetString("output")
-	if err != nil {
-		fmt.Printf("Error getting output flag: %v\n", err)
-		return
-	}
-
-	_, err = cmd.Flags().GetBool("hosted")
-	if err != nil {
-		fmt.Printf("Error getting hosted flag: %v\n", err)
-		return
-	}
-
-	err = profile.ProcessProfile(coverProfileFileName, coverOutputDir)
+	coveragePercent, err := profile.ProcessProfile(profileFile, outputDir)
 	if err != nil {
 		fmt.Printf("Error processing profile: %v\n", err)
+		return
+	}
+
+	if coveragePercent < float64(threshold) {
+		fmt.Printf(
+			color.Red("Coverage percent %.2f%% is below the threshold %d%% \n"), 
+			coveragePercent, threshold,
+		)
+		os.Exit(10)
 		return
 	}
 }
