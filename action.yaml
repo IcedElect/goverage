@@ -65,5 +65,5 @@ runs:
       shell: bash
       if: ${{ steps.coverage.outputs.code != '0' }}
       run: |
-        echo "::error::The script failed, doing something about it
+        echo "::error::The script failed, doing something about it"
         set -e
