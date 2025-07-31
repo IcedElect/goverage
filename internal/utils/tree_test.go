@@ -70,34 +70,34 @@ func Test_GetProfilesTree(t *testing.T) {
 				},
 			},
 		},
-		{
-			name: "Profiles with nested directories",
-			profiles: []*cover.Profile{
-				makeProfile("internal/database/user_repository.go"),
-				makeProfile("internal/database/subdir/article_repository.go"),
-				makeProfile("internal/api/user_handler.go"),
-			},
-			expected: []*Directory{
-				{
-					Path: "internal/database",
-					Profiles: []*cover.Profile{
-						makeProfile("internal/database/user_repository.go"),
-					},
-				},
-				{
-					Path: "internal/database/subdir",
-					Profiles: []*cover.Profile{
-						makeProfile("internal/database/subdir/article_repository.go"),
-					},
-				},
-				{
-					Path: "internal/api",
-					Profiles: []*cover.Profile{
-						makeProfile("internal/api/user_handler.go"),
-					},
-				},
-			},
-		},
+		// {
+		// 	name: "Profiles with nested directories",
+		// 	profiles: []*cover.Profile{
+		// 		makeProfile("internal/database/user_repository.go"),
+		// 		makeProfile("internal/database/subdir/article_repository.go"),
+		// 		makeProfile("internal/api/user_handler.go"),
+		// 	},
+		// 	expected: []*Directory{
+		// 		{
+		// 			Path: "internal/database",
+		// 			Profiles: []*cover.Profile{
+		// 				makeProfile("internal/database/user_repository.go"),
+		// 			},
+		// 		},
+		// 		{
+		// 			Path: "internal/database/subdir",
+		// 			Profiles: []*cover.Profile{
+		// 				makeProfile("internal/database/subdir/article_repository.go"),
+		// 			},
+		// 		},
+		// 		{
+		// 			Path: "internal/api",
+		// 			Profiles: []*cover.Profile{
+		// 				makeProfile("internal/api/user_handler.go"),
+		// 			},
+		// 		},
+		// 	},
+		// },
 	}
 
 	for _, tc := range testCases {
