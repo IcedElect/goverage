@@ -43,7 +43,7 @@ jobs:
         run: go run ./cmd/oh-my-cover-go --profile=coverage.out --output=coverage
 
       - name: Upload Coverage Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage
