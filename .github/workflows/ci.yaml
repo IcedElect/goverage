@@ -31,7 +31,7 @@ jobs:
       - name: Coverage Report
         uses: IcedElect/oh-my-cover-go@main
         with:
-          version: latest
+          version: main
           profilePath: coverage.out
           branch: coverage
           threshold: 15

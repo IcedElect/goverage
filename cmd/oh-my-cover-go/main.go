@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/IcedElect/oh-my-cover-go/internal/profile"
+	"github.com/labstack/gommon/color"
 	"github.com/sethvargo/go-githubactions"
 	"github.com/spf13/cobra"
 )
@@ -36,6 +37,12 @@ func run(cmd *cobra.Command, args []string) {
 		fmt.Printf("Error processing profile: %v\n", err)
 		return
 	}
+
+	defer func() {
+        if r := recover(); r != nil {
+			fmt.Printf(color.Red("Coverage percentage %.2f is below the threshold of %d%%"), coveragePercent, threshold)
+        }
+    }()
 
 	githubactions.SetOutput("percent", fmt.Sprintf("%.2f", coveragePercent))
 
