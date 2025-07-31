@@ -65,7 +65,7 @@ runs:
           echo "No coverage percent found. Skipping threshold check."
         fi
         if (( $(echo "$percent < ${{ inputs.threshold }}" | bc -l) )); then
-          echo "::error::${{ steps.coverage.outputs.result }}"
-          echo "### :warning: Test coverage percent: ${{ steps.coverage.outputs.percent }}% < ${{ inputs.threshold }}%" >> $GITHUB_STEP_SUMMARY
+          echo "::error::Test coverage percentage: ${{ steps.coverage.outputs.percent }}% < ${{ inputs.threshold }}%"
+          echo "### :warning: Test coverage percentage: ${{ steps.coverage.outputs.percent }}% < ${{ inputs.threshold }}%" >> $GITHUB_STEP_SUMMARY
           exit 1
         fi
