@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"time"
 
 	"github.com/IcedElect/oh-my-cover-go/internal/browser"
 	"github.com/IcedElect/oh-my-cover-go/internal/utils"
@@ -20,7 +21,9 @@ func (s *HTMLStrategy) Name() string {
 func (s *HTMLStrategy) Execute(profiles []*cover.Profile, outputDir string) (err error) {
 	outputPath := getOutputPath(outputDir)
 
-	globalData = GlobalData{}
+	globalData = GlobalData{
+		GeneratedTime: time.Now(),
+	}
 
 	err = s.execute(profiles, outputPath)
 	if err != nil {

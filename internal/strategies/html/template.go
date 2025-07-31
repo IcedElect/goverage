@@ -4,6 +4,7 @@ import (
 	"embed"
 	"html/template"
 	"strings"
+	"time"
 
 	"github.com/IcedElect/oh-my-cover-go/internal/utils"
 )
@@ -22,11 +23,12 @@ var (
 	templateFuncs = template.FuncMap{
 		"level": level,
 		"baseurl": baseurl,
+		"timeformat": timeformat,
 	}
 )
 
 type GlobalData struct {
-	BaseUrl       template.URL
+	GeneratedTime time.Time
 	TotalCoverage Coverage
 }
 
@@ -60,4 +62,9 @@ func baseurl(path string) template.URL {
 
 	// Return "../" for each segment
 	return template.URL(strings.Repeat("../", depth))
+}
+
+func timeformat(t time.Time) string {
+	// Format the time in a human-readable format
+	return t.Format("2006-01-02 15:04:05 MST -0700")
 }
