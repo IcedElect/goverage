@@ -6,6 +6,7 @@ import (
 
 	"github.com/IcedElect/oh-my-cover-go/internal/profile"
 	"github.com/labstack/gommon/color"
+	"github.com/sethvargo/go-githubactions"
 	"github.com/spf13/cobra"
 )
 
@@ -36,8 +37,7 @@ func run(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	fmt.Printf(`::set-output name=coverage_percent::%.2f`, coveragePercent)
-	fmt.Print("\n")
+	githubactions.SetOutput("percent", fmt.Sprintf("%.2f", coveragePercent))
 
 	if coveragePercent < float64(threshold) {
 		fmt.Printf(
