@@ -1,0 +1,76 @@
+name: "Go Beautiful HTML Coverage"
+description: "A GitHub Action to track code coverage in your pull requests, with a beautiful HTML preview, for free."
+author: "Aleksey Safronov"
+
+branding:
+  icon: "bar-chart"
+  color: "blue"
+
+inputs:
+  version:
+    description: "Version of oh-my-cover-go to use. Default is latest."
+    default: "latest"
+  repository:
+    description: "Repository name with owner. For example, IcedElect/oh-my-cover-go"
+    default: ${{ github.repository }}
+  profilePath:
+    description: "Path to the coverage profile file. Default is ./coverage.out"
+    default: "./coverage.out"
+  branch:
+    default: cover
+    description: The branch to checkout or create and push coverage to.
+  path:
+    description: The relative path of your go project. Useful for monorepos and custom folder structures.
+    default: "./"
+  strategy:
+    description: The strategy to use for generating the coverage report. Default is html.
+    default: "html"
+  threshold:
+    description: The minimum % of coverage required.
+    default: "0"
+
+runs:
+  using: composite
+  steps:
+    - name: Install oh-my-cover-go
+      shell: bash
+      run: GOBIN=$(pwd)/bin go install github.com/IcedElect/oh-my-cover-go/cmd/oh-my-cover-go@${{ inputs.version }}
+
+    - name: Process coverage profile
+      shell: bash
+      id: coverage
+      run: |
+        if [ -f "${{ inputs.profilePath }}" ]; then
+          echo "Processing coverage profile at ${{ inputs.profilePath }}"
+          ./bin/oh-my-cover-go -p "${{ inputs.profilePath }}" -o "oh-my-covererage" --threshold="${{ inputs.threshold }}" --strategy="${{ inputs.strategy }}"
+        else
+          echo "No coverage profile found at ${{ inputs.profilePath }}. Skipping processing."
+          echo "code=0" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Upload artifact
+      if: inputs.strategy == 'html'
+      uses: actions/upload-pages-artifact@v3
+      with:
+        # Upload entire repository
+        path: "./oh-my-covererage"
+
+    - name: Deploy to GitHub Pages
+      if: inputs.strategy == 'html'
+      id: deployment
+      uses: actions/deploy-pages@v4
+
+    - name: Check threshold
+      shell: bash
+      if: inputs.threshold != 0 && inputs.threshold != '0'
+      run: |
+        echo "coverage report url: ${{ steps.deployment.outputs.page_url }}"
+        percent=${{ steps.coverage.outputs.percent }}
+        if [[ -z "$percent" ]]; then
+          echo "No coverage percent found. Skipping threshold check."
+        fi
+        if (( $(echo "$percent < ${{ inputs.threshold }}" | bc -l) )); then
+          echo "::error::Test coverage percentage: ${{ steps.coverage.outputs.percent }}% < ${{ inputs.threshold }}%"
+          echo "### :warning: Test coverage percentage: ${{ steps.coverage.outputs.percent }}% < ${{ inputs.threshold }}%" >> $GITHUB_STEP_SUMMARY
+          exit 1
+        fi

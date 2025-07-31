@@ -1,11 +1,11 @@
 {{ define "title" }}{{ .File.Name }}: {{ end }}
 
 {{ define "content" }}
-    <link rel="stylesheet" href="{{ .Global.BaseUrl }}/assets/file.css" />
+    <link rel="stylesheet" href="{{ .CurrentPath | baseurl }}/assets/file.css" />
 
     <div id="content">
         <pre class="prettyprint">{{ .File.Code }}</pre>
     </div>
 
-    <script src="{{ .Global.BaseUrl }}/assets/main.js"></script>
+    <script src="{{ .CurrentPath | baseurl }}/assets/file.js"></script>
 {{ end }}

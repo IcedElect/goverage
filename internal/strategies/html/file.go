@@ -83,8 +83,6 @@ func (r *FilesRegistry) AddProfile(profile *cover.Profile) error {
 	path = strings.TrimPrefix(path, utils.GetModulePath())
 	path = strings.TrimPrefix(path, "/")
 
-	fmt.Println(profile.FileName, path, name)
-
 	r.files[profile.FileName] = &File{
 		Path:  path,
 		Name:  name,

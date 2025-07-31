@@ -2,10 +2,10 @@ package html
 
 import (
 	"fmt"
-	"html/template"
 	"os"
 	"path"
 	"path/filepath"
+	"time"
 
 	"github.com/IcedElect/oh-my-cover-go/internal/browser"
 	"github.com/IcedElect/oh-my-cover-go/internal/utils"
@@ -18,34 +18,34 @@ func (s *HTMLStrategy) Name() string {
 	return "HTML"
 }
 
-func (s *HTMLStrategy) Execute(profiles []*cover.Profile, outputDir string) (err error) {
+func (s *HTMLStrategy) Execute(profiles []*cover.Profile, outputDir string) (percent float64, err error) {
 	outputPath := getOutputPath(outputDir)
 
 	globalData = GlobalData{
-		BaseUrl: template.URL("file://" + outputPath),
+		GeneratedTime: time.Now(),
 	}
 
-	err = s.execute(profiles, outputPath)
+	coveragePercent, err := s.execute(profiles, outputPath)
 	if err != nil {
-		return fmt.Errorf("error executing HTML strategy: %v", err)
+		return 0, fmt.Errorf("error executing HTML strategy: %v", err)
 	}
 
 	if outputDir == "" && !browser.Open(path.Join("file://", outputPath, "index.html")) {
 		fmt.Fprintf(os.Stderr, "HTML output written to %s\n", outputDir)
 	}
 
-	return nil
+	return coveragePercent, nil
 }
 
-func (s *HTMLStrategy) execute(profiles []*cover.Profile, outputDir string) error {
+func (s *HTMLStrategy) execute(profiles []*cover.Profile, outputDir string) (float64, error) {
 	tree := utils.GetProfilesTree(profiles)
 	if len(tree) == 0 {
-		return fmt.Errorf("no profiles found")
+		return 0, fmt.Errorf("no profiles found")
 	}
 
 	FilesRegistry, err := NewFilesRegistry(profiles)
 	if err != nil {
-		return fmt.Errorf("error creating files registry: %v", err)
+		return 0, fmt.Errorf("error creating files registry: %v", err)
 	}
 
 	elementsRegistry := NewElementsRegistry(FilesRegistry)
@@ -60,34 +60,36 @@ func (s *HTMLStrategy) execute(profiles []*cover.Profile, outputDir string) erro
 		elementsRegistry.AddDirectory(dir, "")
 	}
 
-	globalData.TotalCoverage = elementsRegistry.GetTotalCoverage()
+	totalCoverage := elementsRegistry.GetTotalCoverage()
+	totalCoveragePercent := totalCoverage.Statements.Percent
+	globalData.TotalCoverage = totalCoverage
 
 	err = s.executeAssets(filepath.Join(outputDir, "assets"))
 	if err != nil {
-		return fmt.Errorf("error executing assets: %v", err)
+		return totalCoveragePercent, fmt.Errorf("error executing assets: %v", err)
 	}
 
-	_, err = s.executeDirectory(outputDir, elementsRegistry, &utils.Directory{
+	_, err = s.executeDirectory(outputDir, elementsRegistry, utils.Directory{
 		Path:    "",
 	})
 	if err != nil {
-		return fmt.Errorf("error executing root directory: %v", err)
+		return totalCoveragePercent, fmt.Errorf("error executing root directory: %v", err)
 	}
 
 	err = s.executeDirectories(tree, elementsRegistry, outputDir)
 	if err != nil {
-		return fmt.Errorf("error executing directories: %v", err)
+		return totalCoveragePercent, fmt.Errorf("error executing directories: %v", err)
 	}
 
 	err = s.executeFiles(FilesRegistry.GetFiles(), outputDir)
 	if err != nil {
-		return fmt.Errorf("error executing files: %v", err)
+		return totalCoveragePercent, fmt.Errorf("error executing files: %v", err)
 	}
 
-	return nil
+	return totalCoveragePercent, nil
 }
 
-func (s *HTMLStrategy) executeDirectories(dirs []*utils.Directory, elementsRegistry *ElementsRegistry, outputDir string) error {
+func (s *HTMLStrategy) executeDirectories(dirs []utils.Directory, elementsRegistry *ElementsRegistry, outputDir string) error {
 	for _, dir := range dirs {
 		if _, err := s.executeDirectory(outputDir, elementsRegistry, dir); err != nil {
 			return fmt.Errorf("error executing directory %s: %v", dir.Path, err)
@@ -107,7 +109,7 @@ func (s *HTMLStrategy) executeFiles(files []*File, outputDir string) error {
 	return nil
 }
 
-func (s *HTMLStrategy) executeDirectory(outputDir string, elementsRegistry *ElementsRegistry, dir *utils.Directory) (*os.File, error) {
+func (s *HTMLStrategy) executeDirectory(outputDir string, elementsRegistry *ElementsRegistry, dir utils.Directory) (*os.File, error) {
 	path := getPath(outputDir, dir.Path, "index.html")
 	w, err := s.createFile(path)
 	if err != nil {

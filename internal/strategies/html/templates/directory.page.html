@@ -1,7 +1,7 @@
 {{ define "title" }}{{ .Directory.Path }}: {{ end }}
 
 {{ define "content" }}
-    <link rel="stylesheet" href="{{ .Global.BaseUrl }}/assets/directory.css" />
+    <link rel="stylesheet" href="{{ .CurrentPath | baseurl }}/assets/directory.css" />
 
     <div class="pad1">
         <table class="coverage-summary">
@@ -44,5 +44,5 @@
         </table>
     </div>
 
-    <script src="{{ .Global.BaseUrl }}/assets/directory.js"></script>
+    <script src="{{ .CurrentPath | baseurl }}/assets/directory.js"></script>
 {{ end }}
