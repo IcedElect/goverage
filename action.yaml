@@ -77,5 +77,5 @@ runs:
       run: |
         echo "::error::${{ steps.coverage.outputs.result }}"
         echo "coverage report url: ${{ steps.deployment.outputs.page_url }}"
-        echo "### Test coverage percent: \n ${{ steps.coverage.outputs.percent }}" >> $GITHUB_STEP_SUMMARY
+        echo "### Test coverage percent: ${{ steps.coverage.outputs.percent }}" >> $GITHUB_STEP_SUMMARY
         exit 1
