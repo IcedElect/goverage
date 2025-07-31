@@ -52,8 +52,6 @@ runs:
             echo "Coverage profile processed successfully."
           fi
 
-          echo "coveragePercent=${{ env.coverage_percent }}"
-
           echo "code=$code" >> "$GITHUB_OUTPUT"
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
         else
@@ -71,11 +69,16 @@ runs:
       id: deployment
       uses: actions/deploy-pages@v4
 
-    - name: Conditional step
+    - name: Check threshold
       shell: bash
-      if: ${{ steps.coverage.outputs.code != '0' }}
       run: |
-        echo "::error::${{ steps.coverage.outputs.result }}"
-        echo "coverage report url: ${{ steps.deployment.outputs.page_url }}"
-        echo "### Test coverage percent: ${{ steps.coverage.outputs.percent }}" >> $GITHUB_STEP_SUMMARY
-        exit 1
+        percent=${{ steps.coverage.outputs.percent }}
+        if [[ -z "$percent" ]]; then
+          echo "No coverage percent found. Skipping threshold check."
+        fi
+        if (( $(echo "$percent < ${{ inputs.threshold }}" | bc -l) )); then
+          echo "::error::${{ steps.coverage.outputs.result }}"
+          echo "coverage report url: ${{ steps.deployment.outputs.page_url }}"
+          echo "### :warning: Test coverage percent: ${{ steps.coverage.outputs.percent }}% < ${{ inputs.threshold }}%" >> $GITHUB_STEP_SUMMARY
+          exit 1
+        fi

@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/IcedElect/oh-my-cover-go/internal/profile"
-	"github.com/labstack/gommon/color"
 	"github.com/sethvargo/go-githubactions"
 	"github.com/spf13/cobra"
 )
@@ -40,11 +38,7 @@ func run(cmd *cobra.Command, args []string) {
 	githubactions.SetOutput("percent", fmt.Sprintf("%.2f", coveragePercent))
 
 	if coveragePercent < float64(threshold) {
-		fmt.Printf(
-			color.Red("Coverage percent %.2f%% is below the threshold %d%% \n"), 
-			coveragePercent, threshold,
-		)
-		os.Exit(10)
+		githubactions.Warningf("Coverage percentage %.2f is below the threshold of %d%%", coveragePercent, threshold)
 		return
 	}
 }
