@@ -40,7 +40,7 @@ runs:
       run: |
         if [ -f "${{ inputs.profilePath }}" ]; then
           echo "Processing coverage profile at ${{ inputs.profilePath }}"
-          ./bin/oh-my-cover-go -p "${{ inputs.profilePath }}" -o "oh-my-covererage"
+          ./bin/oh-my-cover-go -p "${{ inputs.profilePath }}" -o "oh-my-covererage" --threshold="${{ inputs.threshold }}"
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
         else
           echo "No coverage profile found at ${{ inputs.profilePath }}. Skipping processing."
