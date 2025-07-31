@@ -14,6 +14,7 @@ func init() {
 func main() {
 	var profileFile string
 	var outputDir string
+	var hosted bool
 
 	var rootCmd = &cobra.Command{
 		Use:   "oh-my-cover-go",
@@ -21,8 +22,9 @@ func main() {
 		Run: run,
 	}
 
-	rootCmd.PersistentFlags().StringVar(&profileFile, "profile", "", "coverage profile file")
-	rootCmd.PersistentFlags().StringVar(&outputDir, "output", "", "coverage output directory")
+	rootCmd.PersistentFlags().StringVarP(&profileFile, "profile", "p", "", "coverage profile file")
+	rootCmd.PersistentFlags().StringVarP(&outputDir, "output", "o", "", "coverage output directory")
+	rootCmd.PersistentFlags().BoolVar(&hosted, "hosted", false, "coverage output directory")
 
 	rootCmd.Execute()
 }
@@ -40,7 +42,13 @@ func run(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	err = profile.ProcessProfile(coverProfileFileName, coverOutputDir)
+	hosted, err := cmd.Flags().GetBool("hosted")
+	if err != nil {
+		fmt.Printf("Error getting hosted flag: %v\n", err)
+		return
+	}
+
+	err = profile.ProcessProfile(coverProfileFileName, coverOutputDir, hosted)
 	if err != nil {
 		fmt.Printf("Error processing profile: %v\n", err)
 		return

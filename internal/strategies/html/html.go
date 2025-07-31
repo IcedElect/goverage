@@ -18,11 +18,16 @@ func (s *HTMLStrategy) Name() string {
 	return "HTML"
 }
 
-func (s *HTMLStrategy) Execute(profiles []*cover.Profile, outputDir string) (err error) {
+func (s *HTMLStrategy) Execute(profiles []*cover.Profile, outputDir string, hosted bool) (err error) {
 	outputPath := getOutputPath(outputDir)
 
+	baseURL := "/"
+	if !hosted {
+		baseURL = "file://" + outputPath
+	}
+
 	globalData = GlobalData{
-		BaseUrl: template.URL("file://" + outputPath),
+		BaseUrl: template.URL(baseURL),
 	}
 
 	err = s.execute(profiles, outputPath)

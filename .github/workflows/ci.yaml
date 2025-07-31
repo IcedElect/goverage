@@ -19,7 +19,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version: "1.24"
 
       - name: Run tests
         run: go test ./...
@@ -38,7 +38,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version: "1.24"
 
       - name: Set up Pages
         uses: actions/configure-pages@v5
@@ -47,7 +47,7 @@ jobs:
         run: go test -coverprofile=coverage.out ./...
 
       - name: Coverage Report
-        run: go run ./cmd/oh-my-cover-go --profile=coverage.out --output=coverage
+        run: go run ./cmd/oh-my-cover-go --profile=coverage.out --output=coverage --hosted
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

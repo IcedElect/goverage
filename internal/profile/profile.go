@@ -7,7 +7,7 @@ import (
 	"golang.org/x/tools/cover"
 )
 
-func ProcessProfile(profileFile string, outputDir string) error {
+func ProcessProfile(profileFile string, outputDir string, hosted bool) error {
 	profiles, err := cover.ParseProfiles(profileFile)
 	if err != nil {
 		fmt.Printf("Error parsing cover profile: %v\n", err)
@@ -15,7 +15,7 @@ func ProcessProfile(profileFile string, outputDir string) error {
 	}
 
 	htmlStrategy := &html.HTMLStrategy{}
-	err = htmlStrategy.Execute(profiles, outputDir)
+	err = htmlStrategy.Execute(profiles, outputDir, hosted)
 	if err != nil {
 		return err
 	}
