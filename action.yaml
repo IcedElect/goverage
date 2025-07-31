@@ -67,4 +67,4 @@ runs:
       run: |
         echo "::error::${{ steps.coverage.outputs.result }}"
         echo "coverage report url: ${{ steps.deployment.outputs.page_url }}"
-        set -e
+        exit 1
