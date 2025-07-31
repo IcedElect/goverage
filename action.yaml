@@ -52,6 +52,8 @@ runs:
             echo "Coverage profile processed successfully."
           fi
 
+          echo "coveragePercent=${{ env.coverage_percent }}"
+
           echo "code=$code" >> "$GITHUB_OUTPUT"
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
         else
