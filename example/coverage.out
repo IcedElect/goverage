@@ -1,0 +1,11 @@
+mode: set
+github.com/IcedElect/oh-my-cover-go/example/internal/usecase/some/some.go:12.27,14.2 1 1
+github.com/IcedElect/oh-my-cover-go/example/internal/usecase/some/some.go:16.35,19.2 1 0
+github.com/IcedElect/oh-my-cover-go/example/internal/usecase/some/some.go:21.43,23.2 1 1
+github.com/IcedElect/oh-my-cover-go/example/main.go:5.13,7.16 2 0
+github.com/IcedElect/oh-my-cover-go/example/main.go:7.16,9.3 1 0
+github.com/IcedElect/oh-my-cover-go/example/main.go:12.38,13.15 1 1
+github.com/IcedElect/oh-my-cover-go/example/main.go:13.15,15.3 1 0
+github.com/IcedElect/oh-my-cover-go/example/main.go:17.2,17.12 1 1
+github.com/IcedElect/oh-my-cover-go/example/internal/usecase/registry.go:9.30,13.2 1 0
+github.com/IcedElect/oh-my-cover-go/example/internal/usecase/registry.go:15.47,17.2 1 0

@@ -1,0 +1,66 @@
+#content {
+    padding-top: 15px;
+}
+
+pre {
+    position: relative;
+    background: transparent !important;
+}
+
+.code, .coverage {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.coverage {
+    color: transparent !important;
+    background: transparent;
+}
+
+.editor {
+    background: transparent !important;
+}
+
+.editor .cov {
+    display: inline-block;
+    border-width: 0 4px;
+    border-style: solid;
+    border-radius: 2px;
+    border-color: transparent;
+    color: transparent;
+    margin-left: -8px;
+    transform: translateX(4px);
+}
+
+.gutter {
+    display: flex;
+    flex-direction: column;
+    color: var(--gutter-color);
+}
+
+.gutter .ln {
+    text-align: right;
+    padding: 0 16px;
+}
+
+.cov0, .cov-uncovered {
+    color: var(--uncovered);
+}
+
+.cov8, .cov-covered {
+     color: var(--covered);
+}
+
+.cov-covered {
+  background-color: color-mix(in srgb, var(--covered) 10%, transparent);
+}
+
+.cov-uncovered {
+  background-color: color-mix(in srgb, var(--uncovered) 20%, transparent);
+}
+
+.cov-mixed {
+  color: var(--mixed);
+  background-color: color-mix(in srgb, var(--mixed) 10%, transparent);
+}

@@ -1,0 +1,66 @@
+{{ define "layout" }}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ block "title" . }}{{ end }}Oh My Cover Go</title>
+    
+    <link rel="stylesheet" href="{{ .Global.BaseUrl }}/assets/main.css" />
+    <link rel="stylesheet" href="{{ .Global.BaseUrl }}/assets/new.css" />
+    <script src="https://kit.fontawesome.com/e084bc3728.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="pad1">
+            <h1>
+                {{ if .Directory }}
+                    <a href="{{ .Global.BaseUrl }}/index.html">All Files</a>
+                    {{ .Directory.Path }}
+                {{ else if .File }}
+                    <a href="{{ .Global.BaseUrl }}/index.html">All Files</a>
+                    /
+                    <a href="{{ .Global.BaseUrl }}/{{ .File.Path }}/index.html">{{ .File.Path }}</a>
+                    /
+                    {{ .File.Name }}
+                {{ else }}
+                    All Files
+                {{ end }}
+            </h1>
+
+            <div class="clearfix">
+            
+                <div class="fl pad1y space-right2">
+                    <span class="strong">{{ .Global.TotalCoverage.Statements.Percent }}% </span>
+                    <span class="quiet">Statements</span>
+                    <span class="fraction">{{ .Global.TotalCoverage.Statements.Covered }}/{{ .Global.TotalCoverage.Statements.Total }}</span>
+                </div>
+            
+                
+                <div class="fl pad1y space-right2">
+                    <span class="strong">{{ .Global.TotalCoverage.Functions.Percent }}% </span>
+                    <span class="quiet">Functions</span>
+                    <span class="fraction">{{ .Global.TotalCoverage.Functions.Covered }}/{{ .Global.TotalCoverage.Functions.Total }}</span>
+                </div>
+                
+                <div class="fl pad1y space-right2">
+                    <span class="strong">{{ .Global.TotalCoverage.Lines.Percent }}% </span>
+                    <span class="quiet">Lines</span>
+                    <span class="fraction">{{ .Global.TotalCoverage.Lines.Covered }}/{{ .Global.TotalCoverage.Lines.Total }}</span>
+                </div>
+                
+            </div>
+        </header>
+
+        <div class="status-line {{ .Global.TotalCoverage.TotalPercent | level}}"></div>
+
+        <main>
+            {{ block "content" . }}{{ end }}
+        </main>
+
+        <footer class="footer quiet pad2 space-top1 center small">
+            <p>Oh My Cover GO © 2025</p>
+        </footer>
+    </div>
+</body>
+</html>
+{{ end }}

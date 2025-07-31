@@ -1,0 +1,48 @@
+{{ define "title" }}{{ .Directory.Path }}: {{ end }}
+
+{{ define "content" }}
+    <link rel="stylesheet" href="{{ .Global.BaseUrl }}/assets/directory.css" />
+
+    <div class="pad1">
+        <table class="coverage-summary">
+            <thead>
+                <tr>
+                    <th class="file" data-col="file">File</th>
+                    <th class="pic"></th>
+
+                    <th class="pct" data-col="statements-percent">Statements</th>
+                    <th class="abs"></th>
+
+                    <th class="pct" data-col="functions-percent">Functions</th>
+                    <th class="abs"></th>
+
+                    <th class="pct" data-col="lines-percent">Lines</th>
+                    <th class="abs"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .Elements }}
+                    <tr>
+                        <td class="file {{ .Coverage.TotalPercent | level }}" data-col="file"><a href="{{ .Url }}">{{ .Name }}</a></td>
+                        <td class="pic {{ .Coverage.TotalPercent | level }}">
+                            <div class="chart">
+                                <div class="chart-fill" style="width: {{ .Coverage.TotalPercent }}%"></div>
+                            </div>
+                        </td>
+
+                        <td class="pct {{ .Coverage.Statements.Percent | level }}" data-col="statements-percent">{{ .Coverage.Statements.Percent }}%</td>
+                        <td class="abs {{ .Coverage.Statements.Percent | level }}">{{ .Coverage.Statements.Covered }}/{{ .Coverage.Statements.Total }}</td>
+
+                        <td class="pct {{ .Coverage.Functions.Percent | level }}" data-col="functions-percent">{{ .Coverage.Functions.Percent }}%</td>
+                        <td class="abs {{ .Coverage.Functions.Percent | level }}">{{ .Coverage.Functions.Covered }}/{{ .Coverage.Functions.Total }}</td>
+
+                        <td class="pct {{ .Coverage.Lines.Percent | level }}" data-col="lines-percent">{{ .Coverage.Lines.Percent }}%</td>
+                        <td class="abs {{ .Coverage.Lines.Percent | level }}">{{ .Coverage.Lines.Covered }}/{{ .Coverage.Lines.Total }}</td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="{{ .Global.BaseUrl }}/assets/directory.js"></script>
+{{ end }}
