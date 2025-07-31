@@ -28,9 +28,6 @@ inputs:
 
 runs:
   using: composite
-  outputs:
-    code: ${{ steps.coverage.outputs.code }}
-    result: ${{ steps.coverage.outputs.result }}
   steps:
     - name: Install oh-my-cover-go
       shell: bash
