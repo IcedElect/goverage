@@ -59,13 +59,13 @@ runs:
       shell: bash
       if: inputs.threshold != 0 && inputs.threshold != '0'
       run: |
+        echo "coverage report url: ${{ steps.deployment.outputs.page_url }}"
         percent=${{ steps.coverage.outputs.percent }}
         if [[ -z "$percent" ]]; then
           echo "No coverage percent found. Skipping threshold check."
         fi
         if (( $(echo "$percent < ${{ inputs.threshold }}" | bc -l) )); then
           echo "::error::${{ steps.coverage.outputs.result }}"
-          echo "coverage report url: ${{ steps.deployment.outputs.page_url }}"
           echo "### :warning: Test coverage percent: ${{ steps.coverage.outputs.percent }}% < ${{ inputs.threshold }}%" >> $GITHUB_STEP_SUMMARY
           exit 1
         fi
