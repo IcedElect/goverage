@@ -28,7 +28,7 @@ runs:
   steps:
     - name: Install oh-my-cover-go
       shell: bash
-      run: GOBIN=$(pwd)/bin go install github.com/IcedElect/oh-my-cover-go/cmd/oh-my-cover-go@latest
+      run: GOBIN=$(pwd)/bin go install github.com/IcedElect/oh-my-cover-go/cmd/oh-my-cover-go@2df6f092b991c5fef6a579869e2dc7c4d0f913ce
 
     - name: Process coverage profile
       shell: bash
