@@ -31,7 +31,7 @@ jobs:
       - name: Coverage Report
         uses: IcedElect/goverage@feature/strategy-stdout
         with:
-          version: feature/strategy-stdout
+          version: a06bb59e15ac19c7601cdc0e6e8a388be7e2eea8
           profilePath: coverage.out
           branch: coverage
           threshold: 15
