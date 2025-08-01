@@ -3,7 +3,7 @@ package profile
 import (
 	"fmt"
 
-	"github.com/IcedElect/oh-my-cover-go/internal/strategies/html"
+	"github.com/IcedElect/goverage/internal/strategies/html"
 	"golang.org/x/tools/cover"
 )
 

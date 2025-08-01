@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/IcedElect/oh-my-cover-go/internal/profile"
+	"github.com/IcedElect/goverage/internal/profile"
 	"github.com/labstack/gommon/color"
 	"github.com/sethvargo/go-githubactions"
 	"github.com/spf13/cobra"
@@ -18,8 +18,8 @@ var (
 
 func main() {
 	var rootCmd = &cobra.Command{
-		Use:   "oh-my-cover-go",
-		Short: "A tool for report profiling Go test coverage",
+		Use:   "goverage",
+		Short: "A fantastic tool for report profiling Go test coverage",
 		Run: run,
 	}
 
@@ -40,7 +40,9 @@ func run(cmd *cobra.Command, args []string) {
 
 	defer func() {
         if r := recover(); r != nil {
+			if coveragePercent < float64(threshold) {
 			fmt.Printf(color.Red("Coverage percentage %.2f is below the threshold of %d%%"), coveragePercent, threshold)
+			}
         }
     }()
 

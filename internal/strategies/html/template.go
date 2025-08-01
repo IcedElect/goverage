@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/IcedElect/oh-my-cover-go/internal/utils"
+	"github.com/IcedElect/goverage/internal/utils"
 )
 
 var (

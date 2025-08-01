@@ -1,3 +1,3 @@
-module github.com/IcedElect/oh-my-cover-go/example
+module github.com/IcedElect/goverage/example
 
 go 1.23.6

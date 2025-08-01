@@ -1,4 +1,4 @@
-name: CI
+name: ci
 
 on:
   push:
@@ -29,9 +29,9 @@ jobs:
         run: go test -coverprofile=coverage.out ./...
 
       - name: Coverage Report
-        uses: IcedElect/oh-my-cover-go@main
+        uses: IcedElect/goverage@feature/strategy-stdout
         with:
-          version: main
+          version: a06bb59e15ac19c7601cdc0e6e8a388be7e2eea8
           profilePath: coverage.out
           branch: coverage
           threshold: 15

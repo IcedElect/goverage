@@ -1,6 +1,6 @@
 package usecase
 
-import "github.com/IcedElect/oh-my-cover-go/example/internal/usecase/some"
+import "github.com/IcedElect/goverage/example/internal/usecase/some"
 
 type Registry struct {
 	someUsecase some.Usecase

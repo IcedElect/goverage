@@ -1,4 +1,4 @@
-module github.com/IcedElect/oh-my-cover-go
+module github.com/IcedElect/goverage
 
 go 1.23.6
 

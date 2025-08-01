@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"io"
 
-	"github.com/IcedElect/oh-my-cover-go/internal/utils"
+	"github.com/IcedElect/goverage/internal/utils"
 )
 
 func renderDirectory(w io.Writer, dir utils.Directory, elements []*Element) error {
