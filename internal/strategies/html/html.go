@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/IcedElect/oh-my-cover-go/internal/browser"
-	"github.com/IcedElect/oh-my-cover-go/internal/utils"
+	"github.com/IcedElect/goverage/internal/browser"
+	"github.com/IcedElect/goverage/internal/utils"
 	"golang.org/x/tools/cover"
 )
 

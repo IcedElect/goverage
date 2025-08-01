@@ -1,4 +1,4 @@
-name: "Go Beautiful HTML Coverage"
+name: "Goverage Action"
 description: "A GitHub Action to track code coverage in your pull requests, with a beautiful HTML preview, for free."
 author: "Aleksey Safronov"
 
@@ -8,10 +8,10 @@ branding:
 
 inputs:
   version:
-    description: "Version of oh-my-cover-go to use. Default is latest."
+    description: "Version of goverage to use. Default is latest."
     default: "latest"
   repository:
-    description: "Repository name with owner. For example, IcedElect/oh-my-cover-go"
+    description: "Repository name with owner. For example, IcedElect/goverage"
     default: ${{ github.repository }}
   profilePath:
     description: "Path to the coverage profile file. Default is ./coverage.out"
@@ -32,9 +32,9 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Install oh-my-cover-go
+    - name: Install goverage tool
       shell: bash
-      run: GOBIN=$(pwd)/bin go install github.com/IcedElect/oh-my-cover-go/cmd/oh-my-cover-go@${{ inputs.version }}
+      run: GOBIN=$(pwd)/bin go install github.com/IcedElect/goverage/cmd/goverage@${{ inputs.version }}
 
     - name: Process coverage profile
       shell: bash
@@ -42,7 +42,7 @@ runs:
       run: |
         if [ -f "${{ inputs.profilePath }}" ]; then
           echo "Processing coverage profile at ${{ inputs.profilePath }}"
-          ./bin/oh-my-cover-go -p "${{ inputs.profilePath }}" -o "oh-my-covererage" --threshold="${{ inputs.threshold }}" --strategy="${{ inputs.strategy }}"
+          ./bin/goverage -p "${{ inputs.profilePath }}" -o "goverage-report" --threshold="${{ inputs.threshold }}" --strategy="${{ inputs.strategy }}"
         else
           echo "No coverage profile found at ${{ inputs.profilePath }}. Skipping processing."
           echo "code=0" >> "$GITHUB_OUTPUT"
@@ -52,8 +52,8 @@ runs:
       if: inputs.strategy == 'html'
       uses: actions/upload-pages-artifact@v3
       with:
-        # Upload entire repository
-        path: "./oh-my-covererage"
+        name: goverage-report
+        path: "./goverage-report"
 
     - name: Deploy to GitHub Pages
       if: inputs.strategy == 'html'

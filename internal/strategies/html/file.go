@@ -10,7 +10,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/IcedElect/oh-my-cover-go/internal/utils"
+	"github.com/IcedElect/goverage/internal/utils"
 	"golang.org/x/tools/cover"
 )
 
