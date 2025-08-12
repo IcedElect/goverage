@@ -98,9 +98,14 @@ func (r *ElementsRegistry) AddProfile(profile *cover.Profile) *Element {
 		return element
 	}
 
+	modulePath, err := utils.GetModulePath()
+	if err != nil {
+		return nil
+	}
+
 	// name := path.Base(profile.FileName)
 	path := path.Dir(profile.FileName)
-	path = strings.TrimPrefix(path, utils.GetModulePath())
+	path = strings.TrimPrefix(path, modulePath)
 
 	file, exists := r.filesRegistry.GetFile(profile.FileName)
 	if !exists {
@@ -120,10 +125,15 @@ func (r *ElementsRegistry) AddProfile(profile *cover.Profile) *Element {
 }
 
 func (r *ElementsRegistry) AddDirectory(dir utils.Directory, path string) *Element {
+	modulePath, err := utils.GetModulePath()
+	if err != nil {
+		return nil
+	}
+
 	coverage := r.coverageByDirectory(dir)
 	element := &Element{
 		Name:     dir.Path,
-		Path:     strings.TrimPrefix(path, utils.GetModulePath()),
+		Path:     strings.TrimPrefix(path, modulePath),
 		Url:      strings.TrimPrefix(dir.Path, "/") + "/index.html",
 		Coverage: coverage,
 	}

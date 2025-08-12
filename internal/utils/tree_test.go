@@ -110,8 +110,10 @@ func Test_GetProfilesTree(t *testing.T) {
 }
 
 func makeProfile(fileName string) *cover.Profile {
+	modulePath, _ := GetModulePath()
+
 	return &cover.Profile{
-		FileName: path.Join(GetModulePath(), fileName),
+		FileName: path.Join(modulePath, fileName),
 		Mode:     "set",
 		Blocks:   []cover.ProfileBlock{},
 	}

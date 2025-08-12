@@ -78,9 +78,14 @@ func (r *FilesRegistry) AddProfile(profile *cover.Profile) error {
 		return fmt.Errorf("error generating HTML for %s: %v", profile.FileName, err)
 	}
 
+	modulePath, err := utils.GetModulePath()
+	if err != nil {
+		return fmt.Errorf("error getting module path: %v", err)
+	}
+
 	name := path.Base(filePath)
 	path := path.Dir(profile.FileName)
-	path = strings.TrimPrefix(path, utils.GetModulePath())
+	path = strings.TrimPrefix(path, modulePath)
 	path = strings.TrimPrefix(path, "/")
 
 	r.files[profile.FileName] = &File{

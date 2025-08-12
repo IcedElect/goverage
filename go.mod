@@ -7,6 +7,7 @@ require (
 	github.com/sethvargo/go-githubactions v1.3.1
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
+	golang.org/x/mod v0.17.0
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d
 )
 

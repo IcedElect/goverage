@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"path/filepath"
 	"strings"
 
@@ -18,7 +19,10 @@ func GetProfilesTree(profiles []*cover.Profile) []Directory {
 		return nil
 	}
 
-	modulePath := GetModulePath()
+	modulePath, err := GetModulePath()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 	fmt.Println("modulePath", modulePath)
 
 	tree := make(map[string]Directory)
