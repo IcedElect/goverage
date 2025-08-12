@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"path/filepath"
 	"strings"
 
@@ -17,9 +18,12 @@ func GetProfilesTree(profiles []*cover.Profile) []Directory {
 		return nil
 	}
 
+	modulePath := GetModulePath()
+	fmt.Println("modulePath", modulePath)
+
 	tree := make(map[string]Directory)
 	for _, profile := range profiles {
-		fileName := strings.TrimPrefix(profile.FileName, GetModulePath())
+		fileName := strings.TrimPrefix(profile.FileName, modulePath)
 		fileName = filepath.ToSlash(fileName)
 		if strings.HasPrefix(profile.FileName, ".") || filepath.IsAbs(profile.FileName) {
 			// Relative or absolute path.

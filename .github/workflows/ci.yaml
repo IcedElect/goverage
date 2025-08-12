@@ -20,7 +20,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.23.6"
+          go-version: "1.24.2"
 
       - name: Set up Pages
         uses: actions/configure-pages@v5
@@ -29,9 +29,9 @@ jobs:
         run: go test -coverprofile=coverage.out ./...
 
       - name: Coverage Report
-        uses: IcedElect/goverage@feature/strategy-stdout
+        uses: IcedElect/goverage@main
         with:
-          version: a06bb59e15ac19c7601cdc0e6e8a388be7e2eea8
+          version: main
           profilePath: coverage.out
           branch: coverage
           threshold: 15
