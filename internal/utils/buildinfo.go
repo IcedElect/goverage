@@ -1,6 +1,9 @@
 package utils
 
-import "runtime/debug"
+import (
+	"fmt"
+	"runtime/debug"
+)
 
 func GetModulePath() string {
 	bi, ok := debug.ReadBuildInfo()

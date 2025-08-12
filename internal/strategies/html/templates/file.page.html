@@ -2,8 +2,10 @@
 
 {{ define "content" }}
     <link rel="stylesheet" href="{{ .CurrentPath | baseurl }}/assets/file.css" />
-
-    <div id="content">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+    
+    <div class="content" id="content">
         <pre class="prettyprint">{{ .File.Code }}</pre>
     </div>
 

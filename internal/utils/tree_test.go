@@ -25,7 +25,7 @@ func Test_GetProfilesTree(t *testing.T) {
 			profiles: []*cover.Profile{makeProfile("internal/database/user_repository.go")},
 			expected: []Directory{
 				{
-					Path: "internal/database",
+					Path: "/internal/database",
 					Profiles: []*cover.Profile{
 						makeProfile("internal/database/user_repository.go"),
 					},
@@ -40,7 +40,7 @@ func Test_GetProfilesTree(t *testing.T) {
 			},
 			expected: []Directory{
 				{
-					Path: "internal/database",
+					Path: "/internal/database",
 					Profiles: []*cover.Profile{
 						makeProfile("internal/database/user_repository.go"),
 						makeProfile("internal/database/order_repository.go"),
@@ -57,14 +57,14 @@ func Test_GetProfilesTree(t *testing.T) {
 			},
 			expected: []Directory{
 				{
-					Path: "internal/database",
+					Path: "/internal/database",
 					Profiles: []*cover.Profile{
 						makeProfile("internal/database/user_repository.go"),
 						makeProfile("internal/database/article_repository.go"),
 					},
 				},
 				{
-					Path: "internal/api",
+					Path: "/internal/api",
 					Profiles: []*cover.Profile{
 						makeProfile("internal/api/user_handler.go"),
 					},
@@ -80,19 +80,19 @@ func Test_GetProfilesTree(t *testing.T) {
 			},
 			expected: []Directory{
 				{
-					Path: "internal/database",
+					Path: "/internal/database",
 					Profiles: []*cover.Profile{
 						makeProfile("internal/database/user_repository.go"),
 					},
 				},
 				{
-					Path: "internal/database/subdir",
+					Path: "/internal/database/subdir",
 					Profiles: []*cover.Profile{
 						makeProfile("internal/database/subdir/article_repository.go"),
 					},
 				},
 				{
-					Path: "internal/api",
+					Path: "/internal/api",
 					Profiles: []*cover.Profile{
 						makeProfile("internal/api/user_handler.go"),
 					},

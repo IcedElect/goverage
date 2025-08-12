@@ -14,9 +14,19 @@ The fantastic coverage tool for Golang, aims to be developer friendly.
 
 ## How to usage
 
+### Ignoring files
+
 ### CLI
 
 ### Github Actions
+
+#### Github Pages
+
+#### Threshold
+
+## Best practics
+
+### Cover only new changes (for PR)
 
 ## Contributing
 
@@ -24,13 +34,11 @@ The fantastic coverage tool for Golang, aims to be developer friendly.
 
 ## TODO
 
-- difference coverage (only new changes for PR)
 - stdout strategy
-- open files from report page
 - tests
-- coverage requirements
 - elements filter
 - shortcuts
 - documentation
 - multi-threads optimization
-- dark theme
+- open files from report page
+- ignore patterns command
