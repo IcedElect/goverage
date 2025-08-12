@@ -41,10 +41,10 @@ func run(cmd *cobra.Command, args []string) {
 	defer func() {
         if r := recover(); r != nil {
 			if coveragePercent < float64(threshold) {
-			fmt.Printf(color.Red("Coverage percentage %.2f is below the threshold of %d%%"), coveragePercent, threshold)
+				fmt.Printf(color.Red("Coverage percentage %.2f is below the threshold of %d%%"), coveragePercent, threshold)
 			}
-        }
-    }()
+		}
+	}()
 
 	githubactions.SetOutput("percent", fmt.Sprintf("%.2f", coveragePercent))
 

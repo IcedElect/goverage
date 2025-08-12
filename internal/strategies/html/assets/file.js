@@ -2,27 +2,25 @@
 document.documentElement.style.setProperty("opacity", "0");
 
 let loading = load([
-  "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css",
-  "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css",
   "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js",
   "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js",
 ]);
 
 // wait for the page to fully load
-document.addEventListener("DOMContentLoaded", main);
+document.addEventListener("DOMContentLoaded", file);
 
-function main() {
+function file() {
   // wait for highlight.js to load
   if (!window.hljs) {
     console.log("loading: waiting for highlight.js to load...");
-    setTimeout(main, 100);
+    setTimeout(file, 100);
     return;
   }
 
   // wait for all assets to load
   if (!loading.isDone()) {
     console.log("loading: waiting for assets to load...");
-    setTimeout(main, 100);
+    setTimeout(file, 100);
     return;
   }
 

@@ -25,8 +25,15 @@ func GetProfilesTree(profiles []*cover.Profile) []Directory {
 			// Relative or absolute path.
 			continue
 		}
+
 		dirPath := filepath.Dir(fileName)
-		dir, ok := tree[dirPath]; 
+		
+		// Add slash to prefix if not has
+		if !strings.HasPrefix(dirPath, "/") {
+			dirPath = "/" + dirPath
+		}
+
+		dir, ok := tree[dirPath];
 		if !ok {
 			dir = Directory{
 				Path:     dirPath,
