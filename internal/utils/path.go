@@ -6,26 +6,24 @@ import (
 	"path/filepath"
 )
 
-func GetOutputPath(outputDir string) string {
+func GetOutputPath(outputDir string) (string, error) {
 	var outputPath string
 	var err error
 
 	if outputDir == "" {
 		outputPath, err = os.MkdirTemp("", "cover")
 		if err != nil {
-			fmt.Printf("Error creating temporary directory: %v\n", err)
-			return ""
+			return "", fmt.Errorf("error creating temporary directory: %w", err)
 		}
-		return outputPath
+		return outputPath, nil
 	}
 
 	outputPath, err = filepath.Abs(outputDir)
 	if err != nil {
-		fmt.Printf("Error getting absolute path for output directory: %v\n", err)
-		return ""
+		return "", fmt.Errorf("error getting absolute path for output directory: %w", err)
 	}
 
-	return outputPath
+	return outputPath, nil
 }
 
 func GetPath(basePath, path, fileName string) string {

@@ -3,7 +3,6 @@ package utils
 import (
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -29,12 +28,12 @@ func GetModulePath() (string, error) {
 
 	data, err := os.ReadFile(goModPath)
 	if err != nil {
-		log.Fatalf("Failed to read go.mod: %v", err)
+		return "", fmt.Errorf("failed to read go.mod: %w", err)
 	}
 
 	f, err := modfile.Parse("go.mod", data, nil)
 	if err != nil {
-		log.Fatalf("Failed to parse go.mod: %v", err)
+		return "", fmt.Errorf("failed to parse go.mod: %w", err)
 	}
 
 	modulePath = f.Module.Mod.Path

@@ -51,17 +51,17 @@ func FindPkgs(profiles []*cover.Profile) (map[string]*Pkg, error) {
 	cmd.Stderr = &stderr
 	stdout, err := cmd.Output()
 	if err != nil {
-		return nil, fmt.Errorf("cannot run go list: %v\n%s", err, stderr.Bytes())
+		return nil, fmt.Errorf("cannot run go list: %w\n%s", err, stderr.Bytes())
 	}
 	dec := json.NewDecoder(bytes.NewReader(stdout))
 	for {
 		var pkg Pkg
-		err := dec.Decode(&pkg)
-		if err == io.EOF {
+		decodeErr := dec.Decode(&pkg)
+		if decodeErr == io.EOF {
 			break
 		}
-		if err != nil {
-			return nil, fmt.Errorf("decoding go list json: %v", err)
+		if decodeErr != nil {
+			return nil, fmt.Errorf("decoding go list json: %w", decodeErr)
 		}
 		pkgs[pkg.ImportPath] = &pkg
 	}

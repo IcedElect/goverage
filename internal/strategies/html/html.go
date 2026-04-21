@@ -7,7 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/IcedElect/goverage/internal/browser"
+	"github.com/IcedElect/goverage/internal/cli/browser"
+	"github.com/IcedElect/goverage/internal/cli/ui"
 	"github.com/IcedElect/goverage/internal/coverage"
 	"github.com/IcedElect/goverage/internal/structure/elements"
 	"github.com/IcedElect/goverage/internal/structure/files"
@@ -27,19 +28,22 @@ func (s *HTMLStrategy) Execute(
 	elementsRegistry *elements.Registry,
 	outputDir string,
 ) error {
-	outputPath := utils.GetOutputPath(outputDir)
+	outputPath, err := utils.GetOutputPath(outputDir)
+	if err != nil {
+		return fmt.Errorf("error getting output path: %w", err)
+	}
 
 	globalData = GlobalData{
 		GeneratedTime: time.Now(),
 	}
 
-	err := s.render(directories, filesRegistry, elementsRegistry, outputPath)
+	err = s.render(directories, filesRegistry, elementsRegistry, outputPath)
 	if err != nil {
-		return fmt.Errorf("error executing HTML strategy: %v", err)
+		return fmt.Errorf("error executing HTML strategy: %w", err)
 	}
 
 	if outputDir == "" && !browser.Open(path.Join("file://", outputPath, "index.html")) {
-		fmt.Fprintf(os.Stderr, "HTML output written to %s\n", outputDir)
+		ui.Infolnf("HTML output written to %s", outputPath)
 	}
 
 	return nil
@@ -55,55 +59,50 @@ func (s *HTMLStrategy) render(
 
 	err := s.renderAssets(filepath.Join(outputDir, "assets"))
 	if err != nil {
-		return fmt.Errorf("error executing assets: %v", err)
+		return fmt.Errorf("error rendering assets: %w", err)
 	}
 
 	// Render root directory
 	err = s.renderDirectory(outputDir, elementsRegistry, tree.Directory{Path: ""})
 	if err != nil {
-		return fmt.Errorf("error executing root directory: %v", err)
+		return fmt.Errorf("error rendering root directory: %w", err)
 	}
 
-	// Render sub directories
-	err = s.renderDirectories(directories, elementsRegistry, outputDir)
-	if err != nil {
-		return fmt.Errorf("error executing directories: %v", err)
-	}
-
-	// Render files
-	err = s.renderFiles(filesRegistry.GetFiles(), elementsRegistry, outputDir)
-	if err != nil {
-		return fmt.Errorf("error executing files: %v", err)
-	}
+	s.renderDirectories(directories, elementsRegistry, outputDir)
+	s.renderFiles(filesRegistry.GetFiles(), elementsRegistry, outputDir)
 
 	return nil
 }
 
-func (s *HTMLStrategy) renderDirectories(dirs []tree.Directory, elementsRegistry *elements.Registry, outputDir string) error {
+func (s *HTMLStrategy) renderDirectories(
+	dirs []tree.Directory,
+	elementsRegistry *elements.Registry,
+	outputDir string,
+) {
 	for _, dir := range dirs {
 		if err := s.renderDirectory(outputDir, elementsRegistry, dir); err != nil {
-			fmt.Printf("error executing directory %s: %v\n", dir.Path, err)
+			ui.Errorlnf("error rendering directory %s: %v", dir.Path, err)
 		}
 	}
-
-	return nil
 }
 
-func (s *HTMLStrategy) renderFiles(files []*files.File, elementsRegistry *elements.Registry, outputDir string) error {
+func (s *HTMLStrategy) renderFiles(files []*files.File, elementsRegistry *elements.Registry, outputDir string) {
 	for _, file := range files {
-		if _, err := s.renderFile(file, elementsRegistry, outputDir); err != nil {
-			fmt.Printf("error executing file %s: %v\n", file.Name, err)
+		if err := s.renderFile(file, elementsRegistry, outputDir); err != nil {
+			ui.Errorlnf("error rendering file %s: %v", file.Name, err)
 		}
 	}
-
-	return nil
 }
 
-func (s *HTMLStrategy) renderDirectory(outputDir string, elementsRegistry *elements.Registry, dir tree.Directory) error {
+func (s *HTMLStrategy) renderDirectory(
+	outputDir string,
+	elementsRegistry *elements.Registry,
+	dir tree.Directory,
+) error {
 	path := utils.GetPath(outputDir, dir.Path, "index.html")
 	w, err := s.createFile(path)
 	if err != nil {
-		return fmt.Errorf("error creating index.html: %v", err)
+		return fmt.Errorf("error creating index.html: %w", err)
 	}
 	defer w.Close()
 
@@ -121,52 +120,56 @@ func (s *HTMLStrategy) renderDirectory(outputDir string, elementsRegistry *eleme
 
 	err = renderDirectory(w, dir, coverage, elements)
 	if err != nil {
-		return fmt.Errorf("error rendering directory: %v", err)
+		return fmt.Errorf("error rendering directory: %w", err)
 	}
 
 	return nil
 }
 
-func (s *HTMLStrategy) renderFile(file *files.File, elementsRegistry *elements.Registry, outputDir string) (*os.File, error) {
+func (s *HTMLStrategy) renderFile(
+	file *files.File,
+	elementsRegistry *elements.Registry,
+	outputDir string,
+) error {
 	path := utils.GetPath(outputDir, file.RelativePath, file.Name+".html")
 
 	w, err := s.createFile(path)
 	if err != nil {
-		return w, fmt.Errorf("error creating file %s: %v", path, err)
+		return fmt.Errorf("error creating file %s: %w", path, err)
 	}
 	defer w.Close()
 
 	fileElement, ok := elementsRegistry.GetElement(file.Profile.FileName)
 	if !ok {
-		return w, fmt.Errorf("no element found for file %s", file.RelativePath)
+		return fmt.Errorf("no element found for file %s", file.RelativePath)
 	}
 
 	err = renderFile(w, file, fileElement.Coverage)
 	if err != nil {
-		return w, fmt.Errorf("error rendering file: %v", err)
+		return fmt.Errorf("error rendering file: %w", err)
 	}
 
-	return w, nil
+	return nil
 }
 
 func (s *HTMLStrategy) renderAssets(outputPath string) error {
 	files, err := assets.ReadDir("assets")
 	if err != nil {
-		return fmt.Errorf("error reading assets directory: %v", err)
+		return fmt.Errorf("error reading assets directory: %w", err)
 	}
 	for _, file := range files {
-		src, err := assets.ReadFile("assets/" + file.Name())
-		if err != nil {
-			return fmt.Errorf("error reading asset file %s: %v", file.Name(), err)
+		src, readErr := assets.ReadFile("assets/" + file.Name())
+		if readErr != nil {
+			return fmt.Errorf("error reading asset file %s: %w", file.Name(), readErr)
 		}
 		// Create the destination directory if it doesn't exist
-		if err := os.MkdirAll(outputPath, 0755); err != nil {
-			return fmt.Errorf("error creating directory %s: %v", outputPath, err)
+		if mkdirErr := os.MkdirAll(outputPath, 0750); mkdirErr != nil {
+			return fmt.Errorf("error creating directory %s: %w", outputPath, mkdirErr)
 		}
 
 		destPath := filepath.Join(outputPath, file.Name())
-		if err := os.WriteFile(destPath, src, 0644); err != nil {
-			return fmt.Errorf("error writing asset file %s: %v", file.Name(), err)
+		if writeErr := os.WriteFile(destPath, src, 0600); writeErr != nil {
+			return fmt.Errorf("error writing asset file %s: %w", file.Name(), writeErr)
 		}
 	}
 
@@ -174,13 +177,13 @@ func (s *HTMLStrategy) renderAssets(outputPath string) error {
 }
 
 func (s *HTMLStrategy) createFile(path string) (*os.File, error) {
-	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
-		return nil, fmt.Errorf("error creating directory [%s]: %v", filepath.Dir(path), err)
+	if err := os.MkdirAll(filepath.Dir(path), 0750); err != nil {
+		return nil, fmt.Errorf("error creating directory [%s]: %w", filepath.Dir(path), err)
 	}
 
 	file, err := os.Create(path)
 	if err != nil {
-		return nil, fmt.Errorf("error creating file [%s]: %v", path, err)
+		return nil, fmt.Errorf("error creating file [%s]: %w", path, err)
 	}
 
 	return file, nil

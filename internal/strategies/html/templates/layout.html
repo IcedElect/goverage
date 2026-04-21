@@ -7,6 +7,8 @@
     
     <link rel="stylesheet" href="{{ .CurrentPath | baseurl }}/assets/main.css" />
     <script src="https://kit.fontawesome.com/e084bc3728.js" crossorigin="anonymous"></script>
+
+    {{ block "styles" . }}{{ end }}
 </head>
 <body>
     <div class="wrapper">
@@ -64,6 +66,7 @@
     </div>
 
     <script src="{{ .CurrentPath | baseurl }}/assets/main.js"></script>
+    {{ block "scripts" . }}{{ end }}
 </body>
 </html>
 {{ end }}

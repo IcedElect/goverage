@@ -1,8 +1,10 @@
 package profile
 
 import (
+	"errors"
 	"fmt"
 
+	"github.com/IcedElect/goverage/internal/cli/ui"
 	"github.com/IcedElect/goverage/internal/coverage"
 	"github.com/IcedElect/goverage/internal/ignore"
 	"github.com/IcedElect/goverage/internal/strategies/html"
@@ -15,23 +17,22 @@ import (
 func ProcessProfile(profileFile string, outputDir string) (float64, error) {
 	profiles, err := cover.ParseProfiles(profileFile)
 	if err != nil {
-		fmt.Printf("Error parsing cover profile: %v\n", err)
-		return 0, nil
+		return 0, fmt.Errorf("error parsing cover profile: %w", err)
 	}
 
 	profiles = ignore.FilterProfiles(profiles)
 
 	directories, err := tree.GetProfilesTree(profiles)
 	if err != nil {
-		return 0, fmt.Errorf("error building profiles tree: %v", err)
+		return 0, fmt.Errorf("error building profiles tree: %w", err)
 	}
 	if len(directories) == 0 {
-		return 0, fmt.Errorf("no profiles found")
+		return 0, errors.New("no profiles found")
 	}
 
 	filesRegistry, err := makeFilesRegistry(profiles)
 	if err != nil {
-		return 0, fmt.Errorf("error creating files registry: %v", err)
+		return 0, fmt.Errorf("error creating files registry: %w", err)
 	}
 
 	coverageCalculator := coverage.NewCalculator(filesRegistry)
@@ -49,12 +50,12 @@ func ProcessProfile(profileFile string, outputDir string) (float64, error) {
 func makeFilesRegistry(profiles []*cover.Profile) (*files.Registry, error) {
 	filesRegistry, err := files.NewFilesRegistry(profiles)
 	if err != nil {
-		return nil, fmt.Errorf("error creating files registry: %v", err)
+		return nil, fmt.Errorf("error creating files registry: %w", err)
 	}
 
 	for _, profile := range profiles {
-		if err := filesRegistry.AddProfile(profile); err != nil {
-			fmt.Printf("Error adding profile [%s]: %v\n", profile.FileName, err)
+		if profileErr := filesRegistry.AddProfile(profile); profileErr != nil {
+			ui.Errorlnf("Error adding profile [%s]: %v", profile.FileName, profileErr)
 		}
 	}
 

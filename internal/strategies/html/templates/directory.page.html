@@ -1,9 +1,14 @@
 {{ define "title" }}{{ .Directory.Path }}: {{ end }}
 
-{{ define "content" }}
+{{ define "styles" }}
     <link rel="stylesheet" href="{{ .CurrentPath | baseurl }}/assets/directory.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+{{ end }}
 
+{{ define "scripts" }}
+    <script src="{{ .CurrentPath | baseurl }}/assets/directory.js"></script>
+{{ end }}
+
+{{ define "content" }}
     <div class="content pad1">
         <div class="filters">
             <div class="field search">
@@ -50,6 +55,4 @@
             </tbody>
         </table>
     </div>
-
-    <script src="{{ .CurrentPath | baseurl }}/assets/directory.js"></script>
 {{ end }}

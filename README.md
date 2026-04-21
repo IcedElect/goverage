@@ -37,9 +37,6 @@ The fantastic coverage tool for Golang, aims to be developer friendly.
 - stdout strategy
 - tests
 - threshold display in report
-- elements filter
-- shortcuts
-- multi-threads optimization
 - documentation
 - open files from report page (in IDE)
 - ignore patterns command

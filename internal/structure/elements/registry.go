@@ -53,10 +53,13 @@ func (r *Registry) GetTotalCoverage() coverage.Coverage {
 	}
 
 	return coverage.Coverage{
-		Statements:   coverage.NewCoverageItem(totalStatements, coveredStatements),
-		Functions:    coverage.NewCoverageItem(totalFuncs, coveredFuncs),
-		Lines:        coverage.NewCoverageItem(totalLines, coveredLines),
-		TotalPercent: utils.Percent(int64(coveredStatements+coveredLines+coveredFuncs), int64(totalStatements+totalLines+totalFuncs)),
+		Statements: coverage.NewCoverageItem(totalStatements, coveredStatements),
+		Functions:  coverage.NewCoverageItem(totalFuncs, coveredFuncs),
+		Lines:      coverage.NewCoverageItem(totalLines, coveredLines),
+		TotalPercent: utils.Percent(
+			int64(coveredStatements+coveredLines+coveredFuncs),
+			int64(totalStatements+totalLines+totalFuncs),
+		),
 	}
 }
 

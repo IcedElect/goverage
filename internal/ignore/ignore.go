@@ -34,7 +34,7 @@ func FilterProfiles(profiles []*cover.Profile) []*cover.Profile {
 func GetIgnoreLines(root string) []string {
 	var lines []string
 
-	filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -64,6 +64,10 @@ func GetIgnoreLines(root string) []string {
 
 		return nil
 	})
+
+	if err != nil {
+		return nil
+	}
 
 	return lines
 }

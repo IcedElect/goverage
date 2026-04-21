@@ -68,10 +68,13 @@ func (c *Calculator) CoverageByProfile(profile *cover.Profile) Coverage {
 	}
 
 	coverage := Coverage{
-		Statements:   NewCoverageItem(totalStatements, coveredStatements),
-		Functions:    NewCoverageItem(totalFuncs, coveredFuncs),
-		Lines:        NewCoverageItem(totalLines, coveredLines),
-		TotalPercent: utils.Percent(int64(coveredStatements+coveredLines+coveredFuncs), int64(totalStatements+totalLines+totalFuncs)),
+		Statements: NewCoverageItem(totalStatements, coveredStatements),
+		Functions:  NewCoverageItem(totalFuncs, coveredFuncs),
+		Lines:      NewCoverageItem(totalLines, coveredLines),
+		TotalPercent: utils.Percent(
+			int64(coveredStatements+coveredLines+coveredFuncs),
+			int64(totalStatements+totalLines+totalFuncs),
+		),
 	}
 
 	c.cache.Set(profile.FileName, coverage)
@@ -99,9 +102,12 @@ func (c *Calculator) CoverageByDirectory(dir tree.Directory) Coverage {
 	}
 
 	return Coverage{
-		Statements:   NewCoverageItem(totalStatements, coveredStatements),
-		Functions:    NewCoverageItem(totalFuncs, coveredFuncs),
-		Lines:        NewCoverageItem(totalLines, coveredLines),
-		TotalPercent: utils.Percent(int64(coveredStatements+coveredLines+coveredFuncs), int64(totalStatements+totalLines+totalFuncs)),
+		Statements: NewCoverageItem(totalStatements, coveredStatements),
+		Functions:  NewCoverageItem(totalFuncs, coveredFuncs),
+		Lines:      NewCoverageItem(totalLines, coveredLines),
+		TotalPercent: utils.Percent(
+			int64(coveredStatements+coveredLines+coveredFuncs),
+			int64(totalStatements+totalLines+totalFuncs),
+		),
 	}
 }

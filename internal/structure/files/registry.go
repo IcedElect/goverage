@@ -56,17 +56,17 @@ func (r *Registry) AddProfile(profile *cover.Profile) error {
 
 	filePath, err := utils.FindFile(r.dirs, profile.FileName)
 	if err != nil {
-		return fmt.Errorf("error finding file %s: %v", profile.FileName, err)
+		return fmt.Errorf("error finding file %s: %w", profile.FileName, err)
 	}
 
 	funcs, err := utils.FindFuncs(filePath)
 	if err != nil {
-		return fmt.Errorf("error finding functions in %s: %v", profile.FileName, err)
+		return fmt.Errorf("error finding functions in %s: %w", profile.FileName, err)
 	}
 
 	modulePath, err := utils.GetModulePath()
 	if err != nil {
-		return fmt.Errorf("error getting module path: %v", err)
+		return fmt.Errorf("error getting module path: %w", err)
 	}
 
 	name := path.Base(filePath)

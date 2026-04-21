@@ -66,7 +66,7 @@ func (v *FuncVisitor) Visit(node ast.Node) ast.Visitor {
 }
 
 // Coverage returns the fraction of the statements in the function that were covered, as a numerator and denominator.
-func (f *FuncExtent) Coverage(profile *cover.Profile) (num, den int64) {
+func (f *FuncExtent) Coverage(profile *cover.Profile) (int64, int64) {
 	// We could avoid making this n^2 overall by doing a single scan and annotating the functions,
 	// but the sizes of the data structures is never very large and the scan is almost instantaneous.
 	var covered, total int64

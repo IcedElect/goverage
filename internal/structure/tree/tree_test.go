@@ -7,6 +7,7 @@ import (
 
 	"github.com/IcedElect/goverage/internal/utils"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"golang.org/x/tools/cover"
 )
 
@@ -105,8 +106,13 @@ func Test_GetProfilesTree(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			result, err := GetProfilesTree(tc.profiles)
-			assert.NoError(t, err, "Expected no error")
-			assert.Equal(t, sortDirectories(tc.expected), sortDirectories(result), "Expected and actual tree lengths should match")
+			require.NoError(t, err, "Expected no error")
+			assert.Equal(
+				t,
+				sortDirectories(tc.expected),
+				sortDirectories(result),
+				"Expected and actual tree lengths should match",
+			)
 		})
 	}
 }

@@ -21,7 +21,7 @@ func renderDirectory(w io.Writer, dir tree.Directory, coverage coverage.Coverage
 		Funcs(templateFuncs).
 		ParseFS(templates, "templates/layout.html", "templates/directory.page.html")
 	if err != nil {
-		return fmt.Errorf("error parsing templates: %v", err)
+		return fmt.Errorf("error parsing templates: %w", err)
 	}
 
 	err = tmplParsed.Execute(w, TemplateData{
@@ -32,7 +32,7 @@ func renderDirectory(w io.Writer, dir tree.Directory, coverage coverage.Coverage
 		Elements:    elements,
 	})
 	if err != nil {
-		return fmt.Errorf("error executing template: %v", err)
+		return fmt.Errorf("error executing template: %w", err)
 	}
 
 	return nil
@@ -43,12 +43,12 @@ func renderFile(w io.Writer, file *files.File, coverage coverage.Coverage) error
 		Funcs(templateFuncs).
 		ParseFS(templates, "templates/layout.html", "templates/file.page.html")
 	if err != nil {
-		return fmt.Errorf("error parsing templates: %v", err)
+		return fmt.Errorf("error parsing templates: %w", err)
 	}
 
 	code, err := getFileCode(file.Path, file.Profile)
 	if err != nil {
-		return fmt.Errorf("error generating code HTML for %s: %v", file.Path, err)
+		return fmt.Errorf("error generating code HTML for %s: %w", file.Path, err)
 	}
 
 	err = tmplParsed.Execute(w, TemplateData{
@@ -59,7 +59,7 @@ func renderFile(w io.Writer, file *files.File, coverage coverage.Coverage) error
 		Coverage:    coverage,
 	})
 	if err != nil {
-		return fmt.Errorf("error executing template: %v", err)
+		return fmt.Errorf("error executing template: %w", err)
 	}
 
 	return nil
@@ -68,14 +68,14 @@ func renderFile(w io.Writer, file *files.File, coverage coverage.Coverage) error
 func getFileCode(path string, profile *cover.Profile) (string, error) {
 	src, err := os.ReadFile(path)
 	if err != nil {
-		return "", fmt.Errorf("can't read %q: %v", path, err)
+		return "", fmt.Errorf("can't read %q: %w", path, err)
 	}
 
 	var buf strings.Builder
 	boundaries := profile.Boundaries(src)
 	err = htmlGen(&buf, src, boundaries)
 	if err != nil {
-		return "", fmt.Errorf("error generating HTML for %s: %v", path, err)
+		return "", fmt.Errorf("error generating HTML for %s: %w", path, err)
 	}
 
 	return buf.String(), nil
@@ -95,22 +95,22 @@ func htmlGen(w io.Writer, src []byte, boundaries []cover.Boundary) error {
 				}
 				fmt.Fprintf(dst, `<span class="cov%v" title="%v">`, n, b.Count)
 			} else {
-				dst.WriteString("</span>")
+				_, _ = dst.WriteString("</span>")
 			}
 			boundaries = boundaries[1:]
 		}
 
 		switch b := src[i]; b {
 		case '>':
-			dst.WriteString("&gt;")
+			_, _ = dst.WriteString("&gt;")
 		case '<':
-			dst.WriteString("&lt;")
+			_, _ = dst.WriteString("&lt;")
 		case '&':
-			dst.WriteString("&amp;")
+			_, _ = dst.WriteString("&amp;")
 		case '\t':
-			dst.WriteString("        ")
+			_, _ = dst.WriteString("        ")
 		default:
-			dst.WriteByte(b)
+			_ = dst.WriteByte(b)
 		}
 	}
 	return dst.Flush()
