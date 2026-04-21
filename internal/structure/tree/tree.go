@@ -1,51 +1,50 @@
-package utils
+package tree
 
 import (
 	"fmt"
-	"log"
 	"path/filepath"
 	"strings"
 
+	"github.com/IcedElect/goverage/internal/utils"
 	"golang.org/x/tools/cover"
 )
 
 type Directory struct {
-	Path        string
-	Profiles    []*cover.Profile
+	Path     string
+	Profiles []*cover.Profile
 }
 
-func GetProfilesTree(profiles []*cover.Profile) []Directory {
+func GetProfilesTree(profiles []*cover.Profile) ([]Directory, error) {
 	if len(profiles) == 0 {
-		return nil
+		return nil, nil
 	}
 
-	modulePath, err := GetModulePath()
+	modulePath, err := utils.GetModulePath()
 	if err != nil {
-		log.Fatal(err.Error())
+		return nil, fmt.Errorf("error to detect module path: %w", err)
 	}
-	fmt.Println("modulePath", modulePath)
 
 	tree := make(map[string]Directory)
 	for _, profile := range profiles {
 		fileName := strings.TrimPrefix(profile.FileName, modulePath)
 		fileName = filepath.ToSlash(fileName)
 		if strings.HasPrefix(profile.FileName, ".") || filepath.IsAbs(profile.FileName) {
-			// Relative or absolute path.
+			// it's relative or absolute path.
 			continue
 		}
 
 		dirPath := filepath.Dir(fileName)
-		
+
 		// Add slash to prefix if not has
 		if !strings.HasPrefix(dirPath, "/") {
 			dirPath = "/" + dirPath
 		}
 
-		dir, ok := tree[dirPath];
+		dir, ok := tree[dirPath]
 		if !ok {
 			dir = Directory{
 				Path:     dirPath,
-				Profiles: []*cover.Profile{},
+				Profiles: make([]*cover.Profile, 0, len(dir.Profiles)),
 			}
 		}
 
@@ -58,5 +57,5 @@ func GetProfilesTree(profiles []*cover.Profile) []Directory {
 	for _, dir := range tree {
 		result = append(result, dir)
 	}
-	return result
+	return result, nil
 }

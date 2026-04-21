@@ -1,4 +1,4 @@
-package html
+package utils
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func getOutputPath(outputDir string) string {
+func GetOutputPath(outputDir string) string {
 	var outputPath string
 	var err error
 
@@ -28,7 +28,7 @@ func getOutputPath(outputDir string) string {
 	return outputPath
 }
 
-func getPath(basePath, path, fileName string) string {
+func GetPath(basePath, path, fileName string) string {
 	if path == "" {
 		return filepath.Join(basePath, fileName)
 	}

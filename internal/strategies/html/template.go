@@ -6,7 +6,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/IcedElect/goverage/internal/utils"
+	"github.com/IcedElect/goverage/internal/coverage"
+	"github.com/IcedElect/goverage/internal/structure/elements"
+	"github.com/IcedElect/goverage/internal/structure/files"
+	"github.com/IcedElect/goverage/internal/structure/tree"
 )
 
 var (
@@ -21,23 +24,24 @@ var (
 	globalData GlobalData
 
 	templateFuncs = template.FuncMap{
-		"level": level,
-		"baseurl": baseurl,
+		"level":      level,
+		"baseurl":    baseurl,
 		"timeformat": timeformat,
 	}
 )
 
 type GlobalData struct {
 	GeneratedTime time.Time
-	TotalCoverage Coverage
+	TotalCoverage coverage.Coverage
 }
 
 type TemplateData struct {
 	CurrentPath string
 	Global      GlobalData
-	File        *File
-	Directory   *utils.Directory
-	Elements    []*Element
+	File        *files.File
+	FileCode    template.HTML
+	Directory   *tree.Directory
+	Elements    []*elements.Element
 }
 
 func level(percent float64) string {

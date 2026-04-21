@@ -1,10 +1,11 @@
-package utils
+package tree
 
 import (
 	"path"
 	"sort"
 	"testing"
 
+	"github.com/IcedElect/goverage/internal/utils"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/tools/cover"
 )
@@ -16,12 +17,12 @@ func Test_GetProfilesTree(t *testing.T) {
 		expected []Directory
 	}{
 		{
-			name:     "Empty profiles",
+			name:     "empty profiles",
 			profiles: []*cover.Profile{},
 			expected: nil,
 		},
 		{
-			name: "Single profile",
+			name:     "single profile",
 			profiles: []*cover.Profile{makeProfile("internal/database/user_repository.go")},
 			expected: []Directory{
 				{
@@ -33,7 +34,7 @@ func Test_GetProfilesTree(t *testing.T) {
 			},
 		},
 		{
-			name: "Multiple profiles in same directory",
+			name: "multiple profiles in same directory",
 			profiles: []*cover.Profile{
 				makeProfile("internal/database/user_repository.go"),
 				makeProfile("internal/database/order_repository.go"),
@@ -49,7 +50,7 @@ func Test_GetProfilesTree(t *testing.T) {
 			},
 		},
 		{
-			name: "Profiles in different directories",
+			name: "profiles in different directories",
 			profiles: []*cover.Profile{
 				makeProfile("internal/database/user_repository.go"),
 				makeProfile("internal/database/article_repository.go"),
@@ -72,7 +73,7 @@ func Test_GetProfilesTree(t *testing.T) {
 			},
 		},
 		{
-			name: "Profiles with nested directories",
+			name: "profiles with nested directories",
 			profiles: []*cover.Profile{
 				makeProfile("internal/database/user_repository.go"),
 				makeProfile("internal/database/subdir/article_repository.go"),
@@ -103,14 +104,15 @@ func Test_GetProfilesTree(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			result := GetProfilesTree(tc.profiles)
+			result, err := GetProfilesTree(tc.profiles)
+			assert.NoError(t, err, "Expected no error")
 			assert.Equal(t, sortDirectories(tc.expected), sortDirectories(result), "Expected and actual tree lengths should match")
 		})
 	}
 }
 
 func makeProfile(fileName string) *cover.Profile {
-	modulePath, _ := GetModulePath()
+	modulePath, _ := utils.GetModulePath()
 
 	return &cover.Profile{
 		FileName: path.Join(modulePath, fileName),

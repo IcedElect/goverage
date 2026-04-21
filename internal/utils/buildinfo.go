@@ -27,8 +27,6 @@ func GetModulePath() (string, error) {
 		return "", fmt.Errorf("failed to find go.mod: %w", err)
 	}
 
-	fmt.Println(goModPath)
-	
 	data, err := os.ReadFile(goModPath)
 	if err != nil {
 		log.Fatalf("Failed to read go.mod: %v", err)
@@ -48,7 +46,6 @@ func findGoModPath(startDir string) (string, error) {
 
 	for {
 		goModPath := filepath.Join(dir, "go.mod")
-		fmt.Println("Checking for go.mod at:", goModPath)
 		if _, err := os.Stat(goModPath); err == nil {
 			return goModPath, nil
 		}

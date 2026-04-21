@@ -18,7 +18,7 @@
                 {{ else if .File }}
                     <a href="{{ .CurrentPath | baseurl }}/index.html">All Files</a>
                     /
-                    <a href="index.html">{{ .File.Path }}</a>
+                    <a href="index.html">{{ .File.RelativePath }}</a>
                     /
                     {{ .File.Name }}
                 {{ else }}

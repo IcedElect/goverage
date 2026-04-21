@@ -1,4 +1,5 @@
 bin
-coverage*
+coverage.out
+/coverage
 
 .idea

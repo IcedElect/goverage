@@ -56,11 +56,11 @@ function setTheme(mode) {
 
   if (mode === "dark") {
     document.documentElement.classList.add("dark");
-    lightStyle.setAttribute("disabled", "disabled");
-    darkStyle.removeAttribute("disabled");
+    lightStyle?.setAttribute("disabled", "disabled");
+    darkStyle?.removeAttribute("disabled");
   } else {
     document.documentElement.classList.remove("dark");
-    lightStyle.removeAttribute("disabled");
-    darkStyle.setAttribute("disabled", "disabled");
+    lightStyle?.removeAttribute("disabled");
+    darkStyle?.setAttribute("disabled", "disabled");
   }
 }

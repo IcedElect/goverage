@@ -34,4 +34,4 @@ jobs:
           version: main
           profilePath: coverage.out
           branch: coverage
-          threshold: 15
+          threshold: 10

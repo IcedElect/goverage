@@ -1,10 +1,19 @@
 package strategies
 
-import "golang.org/x/tools/cover"
+import (
+	"github.com/IcedElect/goverage/internal/structure/elements"
+	"github.com/IcedElect/goverage/internal/structure/files"
+	"github.com/IcedElect/goverage/internal/structure/tree"
+)
 
 type Strategy interface {
 	Name() string
-	Execute(profiles []*cover.Profile, outputDir string) error
+	Execute(
+		directories []tree.Directory,
+		filesRegistry *files.Registry,
+		elementsRegistry *elements.Registry,
+		outputDir string,
+	) error
 }
 
 type Registry struct {
