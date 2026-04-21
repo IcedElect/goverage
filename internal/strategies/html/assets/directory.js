@@ -3,12 +3,13 @@ document.addEventListener("DOMContentLoaded", main);
 
 function main() {
   configureSort();
+  configureFilter();
 
   sortTable("file", "asc");
   updateHeaderClasses(
     Array.from(document.querySelectorAll("th[data-col]")),
     document.querySelector("th[data-col='file']"),
-    "asc"
+    "asc",
   );
 }
 
@@ -23,6 +24,27 @@ function configureSort() {
       sortTable(col, direction);
       updateHeaderClasses(headers, header, direction);
     });
+  });
+}
+
+function configureFilter() {
+  let filterInput = document.getElementById("filter-input");
+  filterInput.addEventListener("input", () => {
+    filterTable(filterInput.value);
+  });
+
+  document.addEventListener("keydown", function (event) {
+    const active = document.activeElement;
+
+    const isTyping =
+      active.tagName === "INPUT" ||
+      active.tagName === "TEXTAREA" ||
+      active.isContentEditable;
+
+    if (event.key === "/" && !isTyping) {
+      event.preventDefault();
+      filterInput?.focus();
+    }
   });
 }
 
@@ -46,6 +68,20 @@ function sortTable(col, direction) {
   });
 
   rows.forEach((row) => table.appendChild(row)); // re-append sorted rows
+}
+
+function filterTable(query) {
+  let table = document.querySelector("table.coverage-summary");
+  let rows = Array.from(table.querySelectorAll("tr")).slice(1); // skip header row
+
+  rows.forEach((row) => {
+    let fileName = row.querySelector(`td[data-col="file"]`).textContent.trim();
+    if (fileName.toLowerCase().includes(query.toLowerCase())) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  });
 }
 
 function updateHeaderClasses(headers, activeHeader, direction) {

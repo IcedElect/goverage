@@ -52,25 +52,26 @@ func makeFilesRegistry(profiles []*cover.Profile) (*files.Registry, error) {
 		return nil, fmt.Errorf("error creating files registry: %v", err)
 	}
 
-	// @TODO: use semaphore or workerpool for concurrent execution
 	for _, profile := range profiles {
 		if err := filesRegistry.AddProfile(profile); err != nil {
-			return nil, fmt.Errorf("error adding profile [%s]: %v", profile.FileName, err)
+			fmt.Printf("Error adding profile [%s]: %v\n", profile.FileName, err)
 		}
 	}
 
 	return filesRegistry, nil
 }
 
-func makeElementsRegistry(coverageCalculator *coverage.Calculator, profiles []*cover.Profile, directories []tree.Directory) *elements.Registry {
+func makeElementsRegistry(
+	coverageCalculator *coverage.Calculator,
+	profiles []*cover.Profile,
+	directories []tree.Directory,
+) *elements.Registry {
 	elementsRegistry := elements.NewElementsRegistry(coverageCalculator)
 
-	// @TODO: use semaphore or workerpool for concurrent execution
 	for _, profile := range profiles {
 		elementsRegistry.AddProfile(profile)
 	}
 
-	// @TODO: use semaphore or workerpool for concurrent execution
 	for _, dir := range directories {
 		elementsRegistry.AddDirectory(dir, "")
 	}

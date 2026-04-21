@@ -41,6 +41,7 @@ type TemplateData struct {
 	File        *files.File
 	FileCode    template.HTML
 	Directory   *tree.Directory
+	Coverage    coverage.Coverage
 	Elements    []*elements.Element
 }
 

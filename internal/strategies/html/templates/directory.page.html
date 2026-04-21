@@ -2,8 +2,15 @@
 
 {{ define "content" }}
     <link rel="stylesheet" href="{{ .CurrentPath | baseurl }}/assets/directory.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <div class="content pad1">
+        <div class="filters">
+            <div class="field search">
+                <input id="filter-input" placeholder="Filter by name" />
+            </div>
+        </div>
+
         <table class="coverage-summary">
             <thead>
                 <tr>

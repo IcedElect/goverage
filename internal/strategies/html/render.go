@@ -9,13 +9,14 @@ import (
 	"os"
 	"strings"
 
+	"github.com/IcedElect/goverage/internal/coverage"
 	"github.com/IcedElect/goverage/internal/structure/elements"
 	"github.com/IcedElect/goverage/internal/structure/files"
 	"github.com/IcedElect/goverage/internal/structure/tree"
 	"golang.org/x/tools/cover"
 )
 
-func renderDirectory(w io.Writer, dir tree.Directory, elements []*elements.Element) error {
+func renderDirectory(w io.Writer, dir tree.Directory, coverage coverage.Coverage, elements []*elements.Element) error {
 	tmplParsed, err := template.New("layout").
 		Funcs(templateFuncs).
 		ParseFS(templates, "templates/layout.html", "templates/directory.page.html")
@@ -27,6 +28,7 @@ func renderDirectory(w io.Writer, dir tree.Directory, elements []*elements.Eleme
 		CurrentPath: dir.Path,
 		Global:      globalData,
 		Directory:   &dir,
+		Coverage:    coverage,
 		Elements:    elements,
 	})
 	if err != nil {
@@ -36,7 +38,7 @@ func renderDirectory(w io.Writer, dir tree.Directory, elements []*elements.Eleme
 	return nil
 }
 
-func renderFile(w io.Writer, file *files.File) error {
+func renderFile(w io.Writer, file *files.File, coverage coverage.Coverage) error {
 	tmplParsed, err := template.New("layout").
 		Funcs(templateFuncs).
 		ParseFS(templates, "templates/layout.html", "templates/file.page.html")
@@ -54,6 +56,7 @@ func renderFile(w io.Writer, file *files.File) error {
 		Global:      globalData,
 		File:        file,
 		FileCode:    template.HTML(code),
+		Coverage:    coverage,
 	})
 	if err != nil {
 		return fmt.Errorf("error executing template: %v", err)

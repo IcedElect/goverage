@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{{ block "title" . }}{{ end }}Oh My Cover Go</title>
+    <title>{{ block "title" . }}{{ end }}Goverage Report</title>
     
     <link rel="stylesheet" href="{{ .CurrentPath | baseurl }}/assets/main.css" />
     <script src="https://kit.fontawesome.com/e084bc3728.js" crossorigin="anonymous"></script>
@@ -29,22 +29,22 @@
             <div class="badge-list clearfix">
             
                 <div class="badge">
-                    <span class="strong">{{ .Global.TotalCoverage.Statements.Percent }}% </span>
+                    <span class="strong">{{ .Coverage.Statements.Percent }}% </span>
                     <span class="quiet">Statements</span>
-                    <span class="fraction">{{ .Global.TotalCoverage.Statements.Covered }}/{{ .Global.TotalCoverage.Statements.Total }}</span>
+                    <span class="fraction">{{ .Coverage.Statements.Covered }}/{{ .Coverage.Statements.Total }}</span>
                 </div>
             
                 
                 <div class="badge">
-                    <b>{{ .Global.TotalCoverage.Functions.Percent }}% </b>
+                    <b>{{ .Coverage.Functions.Percent }}% </b>
                     <span class="quiet">Functions</span>
-                    <span class="fraction">{{ .Global.TotalCoverage.Functions.Covered }}/{{ .Global.TotalCoverage.Functions.Total }}</span>
+                    <span class="fraction">{{ .Coverage.Functions.Covered }}/{{ .Coverage.Functions.Total }}</span>
                 </div>
                 
                 <div class="badge">
-                    <span class="strong">{{ .Global.TotalCoverage.Lines.Percent }}% </span>
+                    <span class="strong">{{ .Coverage.Lines.Percent }}% </span>
                     <span class="quiet">Lines</span>
-                    <span class="fraction">{{ .Global.TotalCoverage.Lines.Covered }}/{{ .Global.TotalCoverage.Lines.Total }}</span>
+                    <span class="fraction">{{ .Coverage.Lines.Covered }}/{{ .Coverage.Lines.Total }}</span>
                 </div>
                 
             </div>
@@ -52,7 +52,7 @@
             <button id="theme-switcher"></button>
         </header>
 
-        <div class="status-line {{ .Global.TotalCoverage.TotalPercent | level}}"></div>
+        <div class="status-line {{ .Coverage.TotalPercent | level}}"></div>
 
         <main>
             {{ block "content" . }}{{ end }}

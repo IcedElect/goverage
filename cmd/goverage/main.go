@@ -7,20 +7,22 @@ import (
 	"github.com/labstack/gommon/color"
 	"github.com/sethvargo/go-githubactions"
 	"github.com/spf13/cobra"
+
+	_ "go.uber.org/automaxprocs"
 )
 
 var (
 	profileFile string
-	outputDir string
-	strategy string
-	threshold uint16
+	outputDir   string
+	strategy    string
+	threshold   uint16
 )
 
 func main() {
 	var rootCmd = &cobra.Command{
 		Use:   "goverage",
 		Short: "A fantastic tool for report profiling Go test coverage",
-		Run: run,
+		Run:   run,
 	}
 
 	rootCmd.PersistentFlags().StringVarP(&profileFile, "profile", "p", "", "coverage profile file")
@@ -39,7 +41,7 @@ func run(cmd *cobra.Command, args []string) {
 	}
 
 	defer func() {
-        if r := recover(); r != nil {
+		if r := recover(); r != nil {
 			if coveragePercent < float64(threshold) {
 				fmt.Printf(color.Red("Coverage percentage %.2f is below the threshold of %d%%"), coveragePercent, threshold)
 			}

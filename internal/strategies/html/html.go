@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/IcedElect/goverage/internal/browser"
+	"github.com/IcedElect/goverage/internal/coverage"
 	"github.com/IcedElect/goverage/internal/structure/elements"
 	"github.com/IcedElect/goverage/internal/structure/files"
 	"github.com/IcedElect/goverage/internal/structure/tree"
@@ -70,7 +71,7 @@ func (s *HTMLStrategy) render(
 	}
 
 	// Render files
-	err = s.renderFiles(filesRegistry.GetFiles(), outputDir)
+	err = s.renderFiles(filesRegistry.GetFiles(), elementsRegistry, outputDir)
 	if err != nil {
 		return fmt.Errorf("error executing files: %v", err)
 	}
@@ -81,17 +82,17 @@ func (s *HTMLStrategy) render(
 func (s *HTMLStrategy) renderDirectories(dirs []tree.Directory, elementsRegistry *elements.Registry, outputDir string) error {
 	for _, dir := range dirs {
 		if err := s.renderDirectory(outputDir, elementsRegistry, dir); err != nil {
-			return fmt.Errorf("error executing directory %s: %v", dir.Path, err)
+			fmt.Printf("error executing directory %s: %v\n", dir.Path, err)
 		}
 	}
 
 	return nil
 }
 
-func (s *HTMLStrategy) renderFiles(files []*files.File, outputDir string) error {
+func (s *HTMLStrategy) renderFiles(files []*files.File, elementsRegistry *elements.Registry, outputDir string) error {
 	for _, file := range files {
-		if _, err := s.renderFile(file, outputDir); err != nil {
-			return fmt.Errorf("error executing file %s: %v", file.Name, err)
+		if _, err := s.renderFile(file, elementsRegistry, outputDir); err != nil {
+			fmt.Printf("error executing file %s: %v\n", file.Name, err)
 		}
 	}
 
@@ -106,12 +107,19 @@ func (s *HTMLStrategy) renderDirectory(outputDir string, elementsRegistry *eleme
 	}
 	defer w.Close()
 
+	var coverage coverage.Coverage
+	if directoryElement, ok := elementsRegistry.GetElement(dir.Path); ok {
+		coverage = directoryElement.Coverage
+	} else {
+		coverage = elementsRegistry.GetTotalCoverage()
+	}
+
 	elements := elementsRegistry.GetElements(dir.Path)
 	if len(elements) == 0 {
 		return fmt.Errorf("no elements found for directory %s", dir.Path)
 	}
 
-	err = renderDirectory(w, dir, elements)
+	err = renderDirectory(w, dir, coverage, elements)
 	if err != nil {
 		return fmt.Errorf("error rendering directory: %v", err)
 	}
@@ -119,7 +127,7 @@ func (s *HTMLStrategy) renderDirectory(outputDir string, elementsRegistry *eleme
 	return nil
 }
 
-func (s *HTMLStrategy) renderFile(file *files.File, outputDir string) (*os.File, error) {
+func (s *HTMLStrategy) renderFile(file *files.File, elementsRegistry *elements.Registry, outputDir string) (*os.File, error) {
 	path := utils.GetPath(outputDir, file.RelativePath, file.Name+".html")
 
 	w, err := s.createFile(path)
@@ -128,7 +136,12 @@ func (s *HTMLStrategy) renderFile(file *files.File, outputDir string) (*os.File,
 	}
 	defer w.Close()
 
-	err = renderFile(w, file)
+	fileElement, ok := elementsRegistry.GetElement(file.Profile.FileName)
+	if !ok {
+		return w, fmt.Errorf("no element found for file %s", file.RelativePath)
+	}
+
+	err = renderFile(w, file, fileElement.Coverage)
 	if err != nil {
 		return w, fmt.Errorf("error rendering file: %v", err)
 	}

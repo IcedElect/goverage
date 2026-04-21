@@ -95,6 +95,9 @@ header .badge-list {
 }
 
 header .badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     padding: 10px 0;
     padding-right:20px;
 }
