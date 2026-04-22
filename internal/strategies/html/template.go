@@ -24,15 +24,17 @@ var (
 	globalData GlobalData
 
 	templateFuncs = template.FuncMap{
-		"level":      level,
-		"baseurl":    baseurl,
-		"timeformat": timeformat,
+		"level":          level,
+		"baseurl":        baseurl,
+		"timeformat":     timeformat,
+		"thresholdLevel": thresholdLevel,
 	}
 )
 
 type GlobalData struct {
 	GeneratedTime time.Time
 	TotalCoverage coverage.Coverage
+	Threshold     uint16
 }
 
 type TemplateData struct {
@@ -72,4 +74,11 @@ func baseurl(path string) template.URL {
 func timeformat(t time.Time) string {
 	// Format the time in a human-readable format
 	return t.Format("2006-01-02 15:04:05 MST -0700")
+}
+
+func thresholdLevel(percent float64, threshold uint16) string {
+	if uint16(percent) < threshold {
+		return "low"
+	}
+	return "high"
 }

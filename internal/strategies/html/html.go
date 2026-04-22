@@ -18,14 +18,19 @@ import (
 
 type HTMLStrategy struct{}
 
+func NewHtmlStrategy() *HTMLStrategy {
+	return &HTMLStrategy{}
+}
+
 func (s *HTMLStrategy) Name() string {
-	return "HTML"
+	return "html"
 }
 
 func (s *HTMLStrategy) Execute(
 	directories []tree.Directory,
 	filesRegistry *files.Registry,
 	elementsRegistry *elements.Registry,
+	threshold uint16,
 	outputDir string,
 ) error {
 	outputPath, err := utils.GetOutputPath(outputDir)
@@ -35,6 +40,7 @@ func (s *HTMLStrategy) Execute(
 
 	globalData = GlobalData{
 		GeneratedTime: time.Now(),
+		Threshold:     threshold,
 	}
 
 	err = s.render(directories, filesRegistry, elementsRegistry, outputPath)
@@ -63,7 +69,7 @@ func (s *HTMLStrategy) render(
 	}
 
 	// Render root directory
-	err = s.renderDirectory(outputDir, elementsRegistry, tree.Directory{Path: ""})
+	err = s.renderDirectory(outputDir, elementsRegistry, nil)
 	if err != nil {
 		return fmt.Errorf("error rendering root directory: %w", err)
 	}
@@ -80,7 +86,7 @@ func (s *HTMLStrategy) renderDirectories(
 	outputDir string,
 ) {
 	for _, dir := range dirs {
-		if err := s.renderDirectory(outputDir, elementsRegistry, dir); err != nil {
+		if err := s.renderDirectory(outputDir, elementsRegistry, &dir); err != nil {
 			ui.Errorlnf("error rendering directory %s: %v", dir.Path, err)
 		}
 	}
@@ -97,9 +103,14 @@ func (s *HTMLStrategy) renderFiles(files []*files.File, elementsRegistry *elemen
 func (s *HTMLStrategy) renderDirectory(
 	outputDir string,
 	elementsRegistry *elements.Registry,
-	dir tree.Directory,
+	dir *tree.Directory,
 ) error {
-	path := utils.GetPath(outputDir, dir.Path, "index.html")
+	dirPath := ""
+	if dir != nil {
+		dirPath = dir.Path
+	}
+
+	path := utils.GetPath(outputDir, dirPath, "index.html")
 	w, err := s.createFile(path)
 	if err != nil {
 		return fmt.Errorf("error creating index.html: %w", err)
@@ -107,15 +118,15 @@ func (s *HTMLStrategy) renderDirectory(
 	defer w.Close()
 
 	var coverage coverage.Coverage
-	if directoryElement, ok := elementsRegistry.GetElement(dir.Path); ok {
+	if directoryElement, ok := elementsRegistry.GetElement(dirPath); ok {
 		coverage = directoryElement.Coverage
 	} else {
 		coverage = elementsRegistry.GetTotalCoverage()
 	}
 
-	elements := elementsRegistry.GetElements(dir.Path)
+	elements := elementsRegistry.GetElements(dirPath)
 	if len(elements) == 0 {
-		return fmt.Errorf("no elements found for directory %s", dir.Path)
+		return fmt.Errorf("no elements found for directory [%s]", dirPath)
 	}
 
 	err = renderDirectory(w, dir, coverage, elements)

@@ -7,14 +7,14 @@ import (
 	"github.com/IcedElect/goverage/internal/cli/ui"
 	"github.com/IcedElect/goverage/internal/coverage"
 	"github.com/IcedElect/goverage/internal/ignore"
-	"github.com/IcedElect/goverage/internal/strategies/html"
+	"github.com/IcedElect/goverage/internal/strategies"
 	"github.com/IcedElect/goverage/internal/structure/elements"
 	"github.com/IcedElect/goverage/internal/structure/files"
 	"github.com/IcedElect/goverage/internal/structure/tree"
 	"golang.org/x/tools/cover"
 )
 
-func ProcessProfile(profileFile string, outputDir string) (float64, error) {
+func ProcessProfile(strategy strategies.Strategy, profileFile string, threshold uint16, outputDir string) (float64, error) {
 	profiles, err := cover.ParseProfiles(profileFile)
 	if err != nil {
 		return 0, fmt.Errorf("error parsing cover profile: %w", err)
@@ -41,10 +41,12 @@ func ProcessProfile(profileFile string, outputDir string) (float64, error) {
 	totalCoverage := elementsRegistry.GetTotalCoverage()
 	totalCoveragePercent := totalCoverage.Statements.Percent
 
-	htmlStrategy := &html.HTMLStrategy{}
-	err = htmlStrategy.Execute(directories, filesRegistry, elementsRegistry, outputDir)
+	err = strategy.Execute(directories, filesRegistry, elementsRegistry, threshold, outputDir)
+	if err != nil {
+		return totalCoveragePercent, fmt.Errorf("error executing strategy [%s]: %w", strategy.Name(), err)
+	}
 
-	return totalCoveragePercent, err
+	return totalCoveragePercent, nil
 }
 
 func makeFilesRegistry(profiles []*cover.Profile) (*files.Registry, error) {

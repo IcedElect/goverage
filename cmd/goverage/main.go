@@ -5,15 +5,18 @@ import (
 
 	"github.com/IcedElect/goverage/internal/cli/ui"
 	"github.com/IcedElect/goverage/internal/profile"
+	"github.com/IcedElect/goverage/internal/strategies"
+	"github.com/IcedElect/goverage/internal/strategies/html"
+	"github.com/IcedElect/goverage/internal/strategies/stdout"
 	"github.com/sethvargo/go-githubactions"
 	"github.com/spf13/cobra"
 )
 
 var (
-	profileFile string
-	outputDir   string
-	strategy    string
-	threshold   uint16
+	profileFile  string
+	outputDir    string
+	strategyName string
+	threshold    uint16
 )
 
 func main() {
@@ -26,7 +29,7 @@ func main() {
 	rootCmd.PersistentFlags().StringVarP(&profileFile, "profile", "p", "", "coverage profile file")
 	rootCmd.PersistentFlags().StringVarP(&outputDir, "output", "o", "", "coverage output directory")
 	rootCmd.PersistentFlags().
-		StringVarP(&strategy, "strategy", "s", "html", "coverage report strategy (html or stdout)")
+		StringVarP(&strategyName, "strategy", "s", "html", "coverage report strategy (html or stdout)")
 	rootCmd.PersistentFlags().Uint16Var(&threshold, "threshold", 0, "coverage threshold")
 
 	err := rootCmd.Execute()
@@ -36,7 +39,17 @@ func main() {
 }
 
 func run(cmd *cobra.Command, args []string) error {
-	coveragePercent, err := profile.ProcessProfile(profileFile, outputDir)
+	strategiesRegistry := strategies.NewRegistry(
+		&html.HTMLStrategy{},
+		&stdout.StdoutStrategy{},
+	)
+
+	strategy, ok := strategiesRegistry.Get(strategyName)
+	if !ok {
+		return fmt.Errorf("strategy [%s] not found", strategyName)
+	}
+
+	coveragePercent, err := profile.ProcessProfile(strategy, profileFile, threshold, outputDir)
 	if err != nil {
 		return fmt.Errorf("error processing profile: %w", err)
 	}

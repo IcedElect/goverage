@@ -16,7 +16,7 @@ import (
 	"golang.org/x/tools/cover"
 )
 
-func renderDirectory(w io.Writer, dir tree.Directory, coverage coverage.Coverage, elements []*elements.Element) error {
+func renderDirectory(w io.Writer, dir *tree.Directory, coverage coverage.Coverage, elements []*elements.Element) error {
 	tmplParsed, err := template.New("layout").
 		Funcs(templateFuncs).
 		ParseFS(templates, "templates/layout.html", "templates/directory.page.html")
@@ -24,10 +24,15 @@ func renderDirectory(w io.Writer, dir tree.Directory, coverage coverage.Coverage
 		return fmt.Errorf("error parsing templates: %w", err)
 	}
 
+	dirPath := ""
+	if dir != nil {
+		dirPath = dir.Path
+	}
+
 	err = tmplParsed.Execute(w, TemplateData{
-		CurrentPath: dir.Path,
+		CurrentPath: dirPath,
 		Global:      globalData,
-		Directory:   &dir,
+		Directory:   dir,
 		Coverage:    coverage,
 		Elements:    elements,
 	})

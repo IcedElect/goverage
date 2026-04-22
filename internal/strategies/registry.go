@@ -12,6 +12,7 @@ type Strategy interface {
 		directories []tree.Directory,
 		filesRegistry *files.Registry,
 		elementsRegistry *elements.Registry,
+		threshold uint16,
 		outputDir string,
 	) error
 }

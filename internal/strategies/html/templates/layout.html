@@ -48,6 +48,14 @@
                     <span class="quiet">Lines</span>
                     <span class="fraction">{{ .Coverage.Lines.Covered }}/{{ .Coverage.Lines.Total }}</span>
                 </div>
+
+                {{ if and (not .Directory) (not .File) (.Global.Threshold) }}
+                <div class="badge">
+                    <span class="strong">{{ .Global.Threshold }}% </span>
+                    <span class="quiet">Threshold</span>
+                    <span class="fraction {{ thresholdLevel .Global.TotalCoverage.TotalPercent .Global.Threshold }}">{{ .Global.TotalCoverage.TotalPercent }}%</span>
+                </div>
+                {{ end }}
                 
             </div>
 

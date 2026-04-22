@@ -154,6 +154,10 @@ header #theme-switcher::before {
 .medium { background: var(--mixed-background); }
 .high { background: var(--covered-background); }
 
+.badge .fraction.low { background: var(--uncovered); color: var(--topbar-color); font-weight: bold;  }
+.badge .fraction.medium { background: var(--mixed); color: var(--topbar-color); }
+.badge .fraction.high { background: var(--covered); font-weight: bold; }
+
 /* MAIN */
 .content {
   padding: 10px;
